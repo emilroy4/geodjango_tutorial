@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "world.apps.WorldConfig",
+    "whitenoise.runserver_nostatic",
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "geodjango_tutorial.urls"
@@ -80,10 +83,10 @@ DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": "gis",
-        "HOST": "localhost",
+        "HOST": "postgis",
         "USER": "docker",
         "PASSWORD": "docker",
-        "PORT": "25432",
+        "PORT": "5432",
     }
 }
 
@@ -131,7 +134,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # GDAL Library Path - Explicitly defined based on gdal-config output
-GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.9.2_1/lib/libgdal.dylib'
+#GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.9.2_1/lib/libgdal.dylib'
 
 # GEOS Library Path - Explicitly set to point to the correct GEOS library
-GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/geos/3.13.0/lib/libgeos_c.dylib'
+#GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/geos/3.13.0/lib/libgeos_c.dylib'
