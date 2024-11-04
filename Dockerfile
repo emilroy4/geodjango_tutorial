@@ -1,41 +1,37 @@
 FROM continuumio/miniconda3
 LABEL maintainer="emil"
 
-
 ENV PYTHONBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=geodjango_tutorial.settings
 
+# Set up the work directory
 RUN mkdir -p /app
 WORKDIR /app
 
+# Copy environment file and create environment
 COPY ENV.yml .
+RUN conda config --add channels conda-forge && conda env create -f ENV.yml
 
-# Add the conda-forge channel -> fix for whitenoise missing
-RUN conda config --add channels conda-forge
-RUN conda env create -f ENV.yml
+# Install PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client
 
-
+# Activate environment and set as default shell
 RUN echo "conda activate awm-env" >> ~/.bashrc
-SHELL ["/bin/bash", "--login", "-c"]
-# RUN command should use the new environment
-SHELL ["conda", "run", "-n", "awm-env", "/bin/bash", "-c"]
+ENV PATH /opt/conda/envs/awm-env/bin:$PATH
 
-
-
-# Copy everything in your Django project to the image.
-
+# Copy application files
 COPY . /app
 ENV PYTHONPATH="/app"
 
-# The code to run when container is started:
-COPY manage.py .
+# Ensure the entrypoint script is executable
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "awm-env"]
+# Use the entrypoint to activate the environment
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
-
-# EXPOSE the port that container will operate on 
+# Expose port for the Django app
 EXPOSE 8001
 
-# SHELL [ "python", "manage.py", "createsuperuser" ]
-# Finally, start the server
-CMD ["conda", "run", "--no-capture-output", "-n", "awm-env", "python", "manage.py", "runserver", "0.0.0.0:8001"]
+# Start Django development server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
