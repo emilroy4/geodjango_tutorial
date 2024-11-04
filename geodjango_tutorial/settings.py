@@ -80,13 +80,13 @@ WSGI_APPLICATION = "geodjango_tutorial.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "gis",
-        "HOST": "postgis",
-        "USER": "docker",
-        "PASSWORD": "docker",
-        "PORT": "5432",
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'gis',
+        'HOST': 'postgis',
+        'USER': 'docker',
+        'PASSWORD': 'docker',
+        'PORT': '5432'
     }
 }
 
@@ -124,17 +124,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-STATIC_URL = "static/"
+
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# GDAL Library Path - Explicitly defined based on gdal-config output
-#GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.9.2_1/lib/libgdal.dylib'
-
-# GEOS Library Path - Explicitly set to point to the correct GEOS library
-#GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/geos/3.13.0/lib/libgeos_c.dylib'
