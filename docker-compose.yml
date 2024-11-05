@@ -3,8 +3,10 @@ services:
         image: nginx:latest
         ports:
             - 84:80
+            - 443:443
         volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ./nginx/conf.d:/etc/nginx/conf.d/
+            - /etc/letsencrypt:/etc/letsencrypt:ro
         depends_on:
             - awm_django_app  # Only nginx depends on awm_django_app
 
