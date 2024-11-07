@@ -3,23 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event List</title>
+    <title>Event List with Filters and Map View</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
-            height: 500px; /* Adjust height as needed */
-            width: 100%; 
-            margin-bottom: 20px; /* Add some space between the map and the event list */
+            height: 500px;
+            width: 100%;
+            position: relative;
+        }
+        .filter {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .map-type-toggle {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-    <h1><center>Event List<center></h1>
+    <h1>Event List</h1>
 
-    <!-- Map container -->
-    <div id="map"></div>
+    <!-- Map Container with Filter Dropdowns -->
+    <div id="map">
+        <div class="filter">
+            <label for="eventTypeFilter">Event Type:</label>
+            <select id="eventTypeFilter">
+                <option value="all">All</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Festival">Festival</option>
+                <option value="Sports">Sports</option>
+                <option value="Music">Music</option>
+                <option value="Halloween">Halloween</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Social">Social</option>
+                <option value="Dance">Dance</option>
+                <option value="Film">Film</option>
+                <option value="Theatre">Theatre</option>
+                <option value="Broadcast">Broadcast</option>
+                <option value="Exhibition">Exhibition</option>
+            </select>
+            <br>
+            <label for="monthFilter">Month:</label>
+            <select id="monthFilter">
+                <option value="all">All</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            <br>
+            <label for="yearFilter">Year:</label>
+            <select id="yearFilter">
+                <option value="all">All</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <!-- Add more years as needed -->
+            </select>
+        </div>
+        <div class="map-type-toggle">
+            <label for="mapTypeToggle">Map Type:</label>
+            <select id="mapTypeToggle">
+                <option value="standard">Standard</option>
+                <option value="satellite">Satellite</option>
+            </select>
+        </div>
+    </div>
 
-    <!-- Event list -->
     <ul>
         {% for event in events %}
             <li>
@@ -33,20 +103,113 @@
         // Initialize the map centered at Dublin
         var map = L.map('map').setView([53.349805, -6.26031], 8);
 
-        // Add OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Base layers
+        var standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Add event markers
-        {% for event in events %}
-            {% if event.latitude and event.longitude %}
-                L.marker([{{ event.latitude }}, {{ event.longitude }}])
-                    .addTo(map)
-                    .bindPopup('<strong>{{ event.title }}</strong><br>{{ event.start_date|date:"F j, Y" }}<br><a href="{% url "event_detail" event.pk %}">More Info</a>');
-            {% endif %}
-        {% endfor %}
+        var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 19,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '© Google'
+        });
+
+        // Event type to marker color mapping
+        var eventTypeColors = {
+            "Comedy": "blue",
+            "Festival": "green",
+            "Sports": "red",
+            "Music": "purple",
+            "Halloween": "orange",
+            "Workshop": "yellow",
+            "Social": "pink",
+            "Dance": "teal",
+            "Film": "brown",
+            "Theatre": "gray",
+            "Broadcast": "black",
+            "Exhibition": "cyan",
+            "default": "black" // Default color for unspecified types
+        };
+
+        // Store all markers
+        var markers = [];
+
+        // Function to add markers to the map
+        function addMarkers(events) {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            events.forEach(event => {
+                if (event.latitude && event.longitude) {
+                    var color = eventTypeColors[event.eventType] || eventTypeColors["default"];
+                    var marker = L.circleMarker([event.latitude, event.longitude], {
+                        color: color,
+                        radius: 8,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+
+                    marker.bindPopup(`
+                        <strong>${event.title}</strong><br>
+                        ${event.start_date}<br>
+                        <a href="${event.detailUrl}" target="_blank">More Info</a><br>
+                        <a href="https://www.google.com/search?q=${encodeURIComponent(event.title)}" target="_blank">Search on Google</a>
+                    `);
+
+                    markers.push(marker);
+                }
+            });
+        }
+
+        // Example event data (replace this with your actual Django data)
+        var eventData = [
+            {% for event in events %}
+                {
+                    title: "{{ event.title }}",
+                    latitude: {{ event.latitude }},
+                    longitude: {{ event.longitude }},
+                    eventType: "{{ event.event_type }}",
+                    start_date: new Date("{{ event.start_date|date:'Y-m-d' }}"),
+                    detailUrl: "{% url 'event_detail' event.pk %}"
+                },
+            {% endfor %}
+        ];
+
+        // Initially, add all markers
+        addMarkers(eventData);
+
+        // Filter events based on type, month, and year
+        function filterEvents() {
+            var selectedType = document.getElementById('eventTypeFilter').value;
+            var selectedMonth = document.getElementById('monthFilter').value;
+            var selectedYear = document.getElementById('yearFilter').value;
+
+            var filteredEvents = eventData.filter(event => {
+                var matchesType = selectedType === "all" || event.eventType === selectedType;
+                var matchesMonth = selectedMonth === "all" || event.start_date.getMonth() + 1 === parseInt(selectedMonth);
+                var matchesYear = selectedYear === "all" || event.start_date.getFullYear() === parseInt(selectedYear);
+
+                return matchesType && matchesMonth && matchesYear;
+            });
+
+            addMarkers(filteredEvents);
+        }
+
+        // Event listeners for the filters
+        document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
+        document.getElementById('monthFilter').addEventListener('change', filterEvents);
+        document.getElementById('yearFilter').addEventListener('change', filterEvents);
+
+        // Toggle between standard and satellite map view
+        document.getElementById('mapTypeToggle').addEventListener('change', function() {
+            var selectedMapType = this.value;
+            if (selectedMapType === "satellite") {
+                map.removeLayer(standardLayer);
+                satelliteLayer.addTo(map);
+            } else {
+                map.removeLayer(satelliteLayer);
+                standardLayer.addTo(map);
+            }
+        });
     </script>
 </body>
 </html>
