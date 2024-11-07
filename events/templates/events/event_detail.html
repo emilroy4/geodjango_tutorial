@@ -31,7 +31,13 @@
         .social-icons a:hover {
             color: #007bff;
         }
+        .google-search-btn {
+            display: block;
+            margin-top: 15px;
+        }
     </style>
+    <!-- Include Font Awesome for Social Media Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 <body class="container my-5">
     <!-- Back Button -->
@@ -45,14 +51,17 @@
             <strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}
             <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
         </p>
-        
+
         <!-- Embedded Map -->
         <div id="map"></div>
-        
+
         <p><strong>Description:</strong> {{ object.description }}</p>
         <p><strong>Event Type:</strong> {{ object.event_type }}</p>
         <p><strong>Organizer:</strong> {{ object.organizer }}</p> <!-- Adjust if you have an organizer field -->
         <p><strong>More Info:</strong> <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p> <!-- Adjust if you have a URL field -->
+
+        <!-- Search on Google Button -->
+        <a href="https://www.google.com/search?q={{ object.title | urlencode }}" target="_blank" class="btn btn-info google-search-btn">Search on Google</a>
 
         <!-- Social Media Share Icons -->
         <div class="social-icons mt-4">
@@ -79,8 +88,5 @@
             .bindPopup("<strong>{{ object.title }}</strong><br>{{ object.latitude }}, {{ object.longitude }}")
             .openPopup();
     </script>
-
-    <!-- Font Awesome for Social Media Icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
