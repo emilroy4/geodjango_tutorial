@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event List</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px; /* Adjust height as needed */
+            width: 100%; 
+            margin-bottom: 20px; /* Add some space between the map and the event list */
+        }
+    </style>
+</head>
+<body>
+    <h1><center>Event List<center></h1>
+
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <!-- Event list -->
+    <ul>
+        {% for event in events %}
+            <li>
+                <a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a> - {{ event.start_date|date:"F j, Y" }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map centered at Dublin
+        var map = L.map('map').setView([53.349805, -6.26031], 8);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Add event markers
+        {% for event in events %}
+            {% if event.latitude and event.longitude %}
+                L.marker([{{ event.latitude }}, {{ event.longitude }}])
+                    .addTo(map)
+                    .bindPopup('<strong>{{ event.title }}</strong><br>{{ event.start_date|date:"F j, Y" }}<br><a href="{% url "event_detail" event.pk %}">More Info</a>');
+            {% endif %}
+        {% endfor %}
+    </script>
+</body>
+</html>

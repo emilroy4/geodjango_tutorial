@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "world.apps.WorldConfig",
     "whitenoise.runserver_nostatic",
+	"events",
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'gis',
-        'HOST': 'postgis',
+        'HOST': '172.29.0.2',
         'USER': 'docker',
         'PASSWORD': 'docker',
         'PORT': '5432'
@@ -128,6 +129,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

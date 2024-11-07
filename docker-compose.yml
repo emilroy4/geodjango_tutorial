@@ -15,8 +15,8 @@ services:
         ports:
             - 20080:80
         environment:
-            PGADMIN_DEFAULT_EMAIL: c21716601@tudublin.ie
-            PGADMIN_DEFAULT_PASSWORD: mypassword
+            PGADMIN_DEFAULT_EMAIL: emilroy100@gmail.com
+            PGADMIN_DEFAULT_PASSWORD: emilroy100
         depends_on:
             - postgis
 

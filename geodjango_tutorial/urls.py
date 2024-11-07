@@ -24,5 +24,6 @@ urlpatterns = [
 
     path("admin/", admin.site.urls),
 	path('', include('world.urls')),
+	path('events/', include('events.urls')),
 
 ]
