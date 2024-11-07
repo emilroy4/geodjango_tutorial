@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Map App</title>
+    <title>Event List with Filters and Map View</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
@@ -31,34 +31,12 @@
             z-index: 1000;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-        .legend {
-            position: absolute;
-            top: 100px;
-            right: 10px; /* Place it on the right side of the map */
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            font-size: 0.9em;
-        }
-        .legend .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .legend .color-box {
-            width: 15px;
-            height: 15px;
-            margin-right: 5px;
-            border-radius: 3px;
-        }
     </style>
 </head>
 <body>
-    <h1><center>Events</center></h1>
+    <h1>Event List</h1>
 
-    <!-- Map Container with Filter Dropdowns and Legend -->
+    <!-- Map Container with Filter Dropdowns -->
     <div id="map">
         <div class="filter">
             <label for="eventTypeFilter">Event Type:</label>
@@ -100,6 +78,7 @@
                 <option value="all">All</option>
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
+                <!-- Add more years as needed -->
             </select>
         </div>
         <div class="map-type-toggle">
@@ -108,46 +87,6 @@
                 <option value="standard">Standard</option>
                 <option value="satellite">Satellite</option>
             </select>
-        </div>
-
-        <!-- Legend for Event Types -->
-        <div class="legend">
-            <div class="legend-item">
-                <div class="color-box" style="background-color: blue;"></div>Comedy
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: green;"></div>Festival
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: red;"></div>Sports
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: purple;"></div>Music
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: orange;"></div>Halloween
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: yellow;"></div>Workshop
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: pink;"></div>Social
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: teal;"></div>Dance
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: brown;"></div>Film
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: gray;"></div>Theatre
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: black;"></div>Broadcast
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: cyan;"></div>Exhibition
-            </div>
         </div>
     </div>
 
@@ -274,4 +213,3 @@
     </script>
 </body>
 </html>
-

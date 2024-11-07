@@ -4,16 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ object.title }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #map {
+            height: 300px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .event-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .back-link {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .social-icons a {
+            margin-right: 10px;
+            font-size: 24px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .social-icons a:hover {
+            color: #007bff;
+        }
+    </style>
 </head>
-<body>
-    <h1>{{ object.title }}</h1>
-    <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y" }}</p>
-    <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
-    <p><strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}</p>
-    <p><strong>Description:</strong> {{ object.description }}</p>
-    <p><strong>Event Type:</strong> {{ object.event_type }}</p>
-    <p><strong>Organizer:</strong> {{ object.organizer }}</p> <!-- Adjust if you have an organizer field -->
-    <p><strong>More Info:</strong> <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p> <!-- Adjust if you have a URL field -->
-    <a href="{% url 'event_list' %}">Back to Event List</a>
+<body class="container my-5">
+    <!-- Back Button -->
+    <a href="{% url 'event_list' %}" class="back-link btn btn-secondary">&larr; Back to Event List</a>
+
+    <div class="event-card">
+        <h1 class="mb-3">{{ object.title }}</h1>
+        <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y" }}</p>
+        <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
+        <p>
+            <strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}
+            <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
+        </p>
+        
+        <!-- Embedded Map -->
+        <div id="map"></div>
+        
+        <p><strong>Description:</strong> {{ object.description }}</p>
+        <p><strong>Event Type:</strong> {{ object.event_type }}</p>
+        <p><strong>Organizer:</strong> {{ object.organizer }}</p> <!-- Adjust if you have an organizer field -->
+        <p><strong>More Info:</strong> <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p> <!-- Adjust if you have a URL field -->
+
+        <!-- Social Media Share Icons -->
+        <div class="social-icons mt-4">
+            <strong>Share this event:</strong>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ object.url }}" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/intent/tweet?text={{ object.title }}&url={{ object.url }}" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ object.url }}&title={{ object.title }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+
+    <!-- Leaflet.js for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map centered at the event location
+        var map = L.map('map').setView([{{ object.latitude }}, {{ object.longitude }}], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add a marker for the event location
+        L.marker([{{ object.latitude }}, {{ object.longitude }}]).addTo(map)
+            .bindPopup("<strong>{{ object.title }}</strong><br>{{ object.latitude }}, {{ object.longitude }}")
+            .openPopup();
+    </script>
+
+    <!-- Font Awesome for Social Media Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
