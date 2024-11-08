@@ -3,8 +3,13 @@ Visit the website:
 https://c21716601awm24.xyz/events/
 
 Event App:
+
+
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/d33bc345-cbc3-4e57-9fa8-55b00bf66ff5">
 Satellite Mode:
+
+
+
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/fedb43ac-4b71-41c6-b873-cb14ee609cb1">
 Pop up with more details:
 <img width="391" alt="image" src="https://github.com/user-attachments/assets/a3ad602b-d4c8-40e5-9fd4-a201b88523da">
