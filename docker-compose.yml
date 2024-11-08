@@ -29,7 +29,9 @@ services:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker
         volumes:
-            - postgis_data:/var/lib/postgresql/data  # Persistent volume for PostgreSQL data
+            - postgis_data:/var/lib/postgresql/data  # Persistent volume for PostgreSQL da
+
+
 
     awm_django_app:
         build: .
