@@ -1,62 +1,46 @@
-import os
-import django
-
-# Set up the Django environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "geodjango_tutorial.settings")  # Ensure this is your correct settings path
-django.setup()
-
-from events.models import Event  # Import models after setting up the Django environment
-import json
+import csv
 from datetime import datetime
-from django.utils import timezone
+from events.models import Event
 
-# Function to load events from the JSON file
-def load_events_from_json(file_name):
-    # Construct the full file path relative to the current script location
-    file_path = os.path.join(os.path.dirname(__file__), file_name)
+# Path to the CSV file
+file_path = '/home/ubuntu/geodjango_tutorial/Events.csv'
 
-    with open(file_path, 'r', encoding='utf-8') as file:
-        data = json.load(file)
-        for item in data:
+def load_events_from_csv(file_path):
+    with open(file_path, 'r') as csv_file:
+        reader = csv.DictReader(csv_file)
+        
+        # Loop through the rows of the CSV
+        for row in reader:
+            # Extract event details
+            title = row['title']
+            start_date = row['start_date']
+            end_date = row['end_date']
+            location = row['location']
+            url = row['url'] if row['url'] else None
+
+            # Parse dates (assuming CSV dates are in 'DD/MM/YYYY' format)
             try:
-                # Parse date and make it timezone-aware
-                start_date = timezone.make_aware(
-                    datetime.strptime(item['Start Date'], '%d/%m/%Y')
-                )
-                end_date = timezone.make_aware(
-                    datetime.strptime(item['End Date'], '%d/%m/%Y')
-                )
+                start_date = datetime.strptime(start_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+                end_date = datetime.strptime(end_date, '%d/%m/%Y').strftime('%Y-%m-%d')
+            except ValueError as e:
+                print(f"Skipping event due to date format issue: {e}")
+                continue
+            
+            # Check if the event already exists
+            existing_event = Event.objects.filter(title=title, start_date=start_date, end_date=end_date).first()
+            if existing_event:
+                print(f"Skipping duplicate event: {title}")
+                continue  # Skip this event if it already exists
+            
+            # Create and save the new event
+            Event.objects.create(
+                title=title,
+                start_date=start_date,
+                end_date=end_date,
+                location=location,
+                url=url,
+            )
+            print(f"Event '{title}' loaded successfully.")
 
-                # Check for missing latitude and longitude
-                latitude = item.get('Latitude')
-                longitude = item.get('Longitude')
-
-                # Skip event if latitude or longitude is missing
-                if latitude is None or longitude is None:
-                    print(f"Skipping event '{item['Name']}': Missing latitude or longitude.")
-                    continue
-
-                # Truncate fields if necessary
-                title = item['Name'][:200]  # Limit to 200 characters
-                event_type = item['Event Type'][:100]  # Adjust limit based on your model
-
-                # Create or update the event
-                Event.objects.update_or_create(
-                    title=title,
-                    event_type=event_type,
-                    defaults={
-                        'description': item.get('Description', '')[:500],  # Adjust limit as needed
-                        'start_date': start_date,
-                        'end_date': end_date,
-                        'location': item.get('Location', '')[:200],  # Adjust limit as needed
-                        'url': item.get('URL', '')[:200],  # Adjust limit as needed
-                        'latitude': latitude,
-                        'longitude': longitude,
-                    }
-                )
-                print(f"Event '{title}' loaded successfully.")
-            except Exception as e:
-                print(f"Error loading event '{item['Name']}': {e}")
-
-# Load events from the specified JSON file
-load_events_from_json('limited_events.json')
+# Load events from CSV
+load_events_from_csv(file_path)

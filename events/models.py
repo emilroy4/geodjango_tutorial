@@ -8,10 +8,10 @@ class Event(models.Model):
     location = models.TextField()  # Changed from CharField to TextField
     latitude = models.FloatField()
     longitude = models.FloatField()
-    url = models.URLField()
+    url = models.URLField(max_length=500, blank=True, null=True)
     event_type = models.TextField()  # Changed from CharField to TextField
-    contact_url = models.URLField(blank=True, null=True)
-    booking_url = models.URLField(blank=True, null=True)
+    contact_url = models.URLField(max_length=500, blank=True, null=True)
+    booking_url = models.URLField(max_length=500, blank=True, null=True)
     contact_phone_number = models.TextField(max_length=1000, blank=True, null=True)  # Can stay as CharField if phone numbers are short
     booking_phone_number = models.TextField(max_length=1000, blank=True, null=True)  # Can stay as CharField if phone numbers are short
     venue_name = models.TextField()  # Changed from CharField to TextField
