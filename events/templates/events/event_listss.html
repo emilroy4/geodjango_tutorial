@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ireland Events</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="top-nav">
+        <h1>Ireland Events</h1>
+        <div class="view-toggle">
+            <button class="active" data-view="map">Map View</button>
+            <button data-view="grid">Grid View</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="filters">
+            <select id="eventTypeFilter">
+                <option value="all">All Event Types</option>
+                {% for event_type in event_types %}
+                    <option value="{{ event_type }}">{{ event_type }}</option>
+                {% endfor %}
+            </select>
+            <select id="monthFilter">
+                <option value="all">All Months</option>
+                {% for month in months %}
+                    <option value="{{ month.0 }}">{{ month.1 }}</option>
+                {% endfor %}
+            </select>
+            <select id="yearFilter">
+                <option value="all">All Years</option>
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div id="mapView" class="view active">
+            <div id="map"></div>
+        </div>
+
+        <div id="gridView" class="view">
+            <div class="events-grid">
+                {% for event in events %}
+                    <div class="event-card" data-event-type="{{ event.event_type }}" data-event-month="{{ event.start_date|date:'n' }}" data-event-year="{{ event.start_date|date:'Y' }}">
+                        <h3>{{ event.title }}</h3>
+                        <p>{{ event.start_date|date:"F j, Y" }}</p>
+                        <p>{{ event.event_type }}</p>
+                        <a href="{% url 'event_detail' event.pk %}" class="btn">View Details</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="events.js"></script>
+</body>
+</html>

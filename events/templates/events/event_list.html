@@ -3,327 +3,758 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Map App</title>
+    <title>Ireland Events</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        #map {
-            height: 500px;
-            width: 100%;
-            position: relative;
+        /* Mobile-first styles */
+        body {
+            background-color: #f5f5f5;
+            padding: 0 15px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .filter {
+
+        .app-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 15px auto;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .header-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .header-controls .btn {
+            flex: 1;
+            min-width: auto;
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filters {
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .filter-dropdown {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: none;
+            margin-left: 0;
+        }
+
+        #map {
+            height: calc(100vh - 200px);
+            width: 100%;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+        }
+
+        .grid-view {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .event-card {
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .event-card:hover,
+        .event-card:active {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            background-color: #ffffff;
+        }
+
+        .event-image {
+            height: 180px;
+        }
+
+        .event-content {
+            padding: 15px;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .event-date, .event-type {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.dark-mode .app-container {
+            background: #1e1e1e;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .header,
+        body.dark-mode .filters {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+
+        body.dark-mode .header-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .event-card {
+            background-color: #2a2a2a;
+            border-color: #404040;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.dark-mode .event-card:hover,
+        body.dark-mode .event-card:active {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            background-color: #333333;
+        }
+
+        body.dark-mode .event-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .event-date,
+        body.dark-mode .event-type {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .filter-dropdown {
+            background-color: #404040;
+            color: #ffffff;
+            border-color: #505050;
+        }
+
+        body.dark-mode .grid-view {
+            background-color: #1a1a1a;
+        }
+
+        body.dark-mode .search-bar {
+            background-color: #404040;
+            color: #ffffff;
+            border-color: #505050;
+        }
+
+        body.dark-mode .search-bar::placeholder {
+            color: #888888;
+        }
+
+        /* Touch device hover effects for both light and dark modes */
+        @media (hover: none) {
+            .event-card:active {
+                transform: translateY(-5px) scale(1.02);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+                background-color: #ffffff;
+            }
+
+            body.dark-mode .event-card:active {
+                transform: translateY(-5px) scale(1.02);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+                background-color: #333333;
+            }
+        }
+
+        .favorite-btn {
+            cursor: pointer;
             position: absolute;
             top: 10px;
             right: 10px;
-            background-color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .map-type-toggle {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background-color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .legend {
-            position: absolute;
-            top: 100px;
-            right: 10px; /* Place it on the right side of the map */
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            font-size: 0.9em;
-        }
-        .legend .legend-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .legend .color-box {
-            width: 15px;
-            height: 15px;
-            margin-right: 5px;
-            border-radius: 3px;
+
+        .favorite-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.3);
         }
-        .event-list {
-            margin-top: 20px;
-            padding: 0;
-            list-style: none;
+
+        .favorite-btn.active {
+            color: #ff4444;
+            animation: pop 0.3s ease;
         }
-        .event-item {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Dark mode adjustments */
+        body.dark-mode .favorite-btn {
+            background: rgba(40, 40, 40, 0.9);
+            color: #fff;
+        }
+
+        body.dark-mode .favorite-btn.active {
+            color: #ff4444;
+        }
+
+        .map-legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
             border-radius: 5px;
-            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 150px;
+            font-size: 11px;
+        }
+
+        .map-legend h6 {
+            margin-bottom: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            margin-right: 6px;
+            border-radius: 50%;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        /* Dark mode additions */
+        body.dark-mode .map-legend {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        body.dark-mode .map-controls select {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        .legend {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .map-type-control {
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
+            margin-left: 10px;
+            margin: 8px;
         }
-        .event-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+        .map-type-control select {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px;
+            font-size: 0.9rem;
         }
-        .event-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #007bff;
-            text-decoration: none;
+
+        .legend-items {
+            margin-top: 5px;
         }
-        .event-date {
-            color: #6c757d;
-            font-size: 0.9em;
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        body.dark-mode .legend,
+        body.dark-mode .map-type-control {
+            background: #333;
+            color: white;
+        }
+
+        body.dark-mode .map-type-control {
+            background: #333;
+        }
+
+        body.dark-mode .map-type-control select {
+            background: #444;
+            color: white;
+            border-color: #555;
+        }
+
+        /* Tablet breakpoint */
+        @media (min-width: 768px) {
+            .header {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .header-controls {
+                width: auto;
+            }
+
+            .filters {
+                flex-direction: row;
+            }
+
+            .filter-dropdown {
+                width: auto;
+            }
+
+            .grid-view {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop breakpoint */
+        @media (min-width: 1024px) {
+            body {
+                padding: 20px;
+            }
+
+            .app-container {
+                margin: 30px auto;
+            }
+
+            .grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+
+            .search-bar {
+                max-width: 300px;
+                margin-left: auto;
+            }
+        }
+
+        /* Style for favorite event markers */
+        .favorite-marker {
+            border: 3px solid #ff4444 !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
-    <h1><center>Events</center></h1>
-
-    <!-- Map Container with Filter Dropdowns and Legend -->
-    <div id="map">
-        <div class="filter">
-            <label for="eventTypeFilter">Event Type:</label>
-            <select id="eventTypeFilter">
-                <option value="all">All</option>
-                <option value="Comedy">Comedy</option>
-                <option value="Festival">Festival</option>
-                <option value="Sports">Sports</option>
-                <option value="Music">Music</option>
-                <option value="Halloween">Halloween</option>
-                <option value="Workshop">Workshop</option>
-                <option value="Social">Social</option>
-                <option value="Dance">Dance</option>
-                <option value="Film">Film</option>
-                <option value="Theatre">Theatre</option>
-                <option value="Broadcast">Broadcast</option>
-                <option value="Exhibition">Exhibition</option>
-            </select>
-            <br>
-            <label for="monthFilter">Month:</label>
-            <select id="monthFilter">
-                <option value="all">All</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-            </select>
-            <br>
-            <label for="yearFilter">Year:</label>
-            <select id="yearFilter">
-                <option value="all">All</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-            </select>
-        </div>
-        <div class="map-type-toggle">
-            <label for="mapTypeToggle">Map Type:</label>
-            <select id="mapTypeToggle">
-                <option value="standard">Standard</option>
-                <option value="satellite">Satellite</option>
-            </select>
+    <div class="app-container">
+        <!-- Update the header section -->
+        <div class="header">
+            <div class="header-title">Ireland Events</div>
+            <div class="header-controls">
+                <button id="mapViewBtn" class="btn btn-primary btn-sm active">Map</button>
+                <button id="gridViewBtn" class="btn btn-secondary btn-sm">Grid</button>
+                <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
+                <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
+                <a href="#" class="btn btn-primary btn-sm">Login</a>
+            </div>
         </div>
 
-        <!-- Legend for Event Types -->
-        <div class="legend">
-            <div class="legend-item">
-                <div class="color-box" style="background-color: blue;"></div>Comedy
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: green;"></div>Festival
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: red;"></div>Sports
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: purple;"></div>Music
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: orange;"></div>Halloween
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: yellow;"></div>Workshop
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: pink;"></div>Social
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: teal;"></div>Dance
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: brown;"></div>Film
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: gray;"></div>Theatre
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: black;"></div>Broadcast
-            </div>
-            <div class="legend-item">
-                <div class="color-box" style="background-color: cyan;"></div>Exhibition
-            </div>
+        <!-- Update the filters section -->
+        <div class="filters">
+            <select class="filter-dropdown" id="eventTypeFilter">
+                <option value="all">All Event Types</option>
+                {% for type in event_types %}
+                    <option value="{{ type }}">{{ type }}</option>
+                {% endfor %}
+            </select>
+            <select class="filter-dropdown" id="monthFilter">
+                <option value="all">All Months</option>
+                {% for month in months %}
+                    <option value="{{ month.0 }}">{{ month.1 }}</option>
+                {% endfor %}
+            </select>
+            <select class="filter-dropdown" id="yearFilter">
+                <option value="all">All Years</option>
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" class="form-control search-bar" id="searchInput" placeholder="Search events...">
+        </div>
+
+        <div id="mapView">
+            <div id="map"></div>
+        </div>
+
+        <div id="gridView" class="grid-view" style="display: none;">
+            <!-- Event cards will be dynamically added here -->
         </div>
     </div>
 
-    <ul class="event-list container">
-        {% for event in events %}
-            <li class="event-item" data-title="{{ event.title }}">
-                <a href="{% url 'event_detail' event.pk %}" class="event-title">{{ event.title }}</a>
-                <p class="event-date">{{ event.start_date|date:"F j, Y" }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-    // Initialize the map centered at Dublin
-    // Initialize the map centered at Dublin
-var map = L.map('map').setView([53.349805, -6.26031], 8);
 
-// Base layers
-var standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-}).addTo(map);
 
-var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    maxZoom: 19,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    attribution: '© Google'
-});
-
-// Map type toggle functionality
-document.getElementById('mapTypeToggle').addEventListener('change', function() {
-    var selectedMapType = this.value;
-    if (selectedMapType === "satellite") {
-        map.removeLayer(standardLayer);
-        satelliteLayer.addTo(map);
-    } else {
-        map.removeLayer(satelliteLayer);
-        standardLayer.addTo(map);
-    }
-});
-
-    // Event type to marker color mapping
-    var eventTypeColors = {
-        "Comedy": "blue",
-        "Festival": "green",
-        "Sports": "red",
-        "Music": "purple",
-        "Halloween": "orange",
-        "Workshop": "yellow",
-        "Social": "pink",
-        "Dance": "teal",
-        "Film": "brown",
-        "Theatre": "gray",
-        "Broadcast": "black",
-        "Exhibition": "cyan",
-        "default": "black" // Default color for unspecified types
-    };
-
-    // Store all markers
-    var markers = [];
-
-    // Function to add markers to the map
-    function addMarkers(events) {
-        // Remove existing markers
-        markers.forEach(marker => map.removeLayer(marker));
-        markers = []; // Clear the markers array
-
-        // Add new markers
-        events.forEach(event => {
-            if (event.latitude && event.longitude) {
-                var color = eventTypeColors[event.eventType] || eventTypeColors["default"];
-                var marker = L.circleMarker([event.latitude, event.longitude], {
-                    color: color,
-                    radius: 8,
-                    fillOpacity: 0.8
-                }).addTo(map);
-
-                marker.bindPopup(`
-                    <strong>${event.title}</strong><br>
-                    ${event.start_date}<br>
-                    <a href="${event.detailUrl}" target="_blank">More Info</a><br>
-                    <a href="https://www.google.com/search?q=${encodeURIComponent(event.title)}" target="_blank">Search on Google</a>
-                `);
-
-                markers.push(marker); // Store the marker
-            }
-        });
-    }
-
-    // Example event data (replace this with your actual Django data)
-    var eventData = [
+    // Event data from Django
+    const eventData = [
         {% for event in events %}
             {
-                title: "{{ event.title }}",
-                latitude: {{ event.latitude }},
-                longitude: {{ event.longitude }},
-                eventType: "{{ event.event_type }}",
-                start_date: new Date("{{ event.start_date|date:'Y-m-d' }}"),
-                detailUrl: "{% url 'event_detail' event.pk %}"
-            },
+                "id": {{ event.id }},
+                "title": "{{ event.title|escapejs }}",
+                "latitude": {{ event.latitude }},
+                "longitude": {{ event.longitude }},
+                "eventType": "{{ event.event_type|escapejs }}",
+                "start_date": new Date("{{ event.start_date|date:'Y-m-d' }}"),
+                "detailUrl": "{% url 'event_detail' event.pk %}"
+            }{% if not forloop.last %},{% endif %}
         {% endfor %}
     ];
 
-    // Initially, add all markers
-    addMarkers(eventData);
+    console.log('Event Data:', eventData);
 
-    // Filter events based on type, month, and year
-    function filterEvents() {
-        var selectedType = document.getElementById('eventTypeFilter').value;
-        var selectedMonth = document.getElementById('monthFilter').value;
-        var selectedYear = document.getElementById('yearFilter').value;
+    // Initialize map first
+    const map = L.map('map').setView([53.349805, -6.26031], 7);
 
-        var filteredEvents = eventData.filter(event => {
-            var matchesType = selectedType === "all" || event.eventType === selectedType;
-            var matchesMonth = selectedMonth === "all" || event.start_date.getMonth() + 1 === parseInt(selectedMonth);
-            var matchesYear = selectedYear === "all" || event.start_date.getFullYear() === parseInt(selectedYear);
+    // Base layers
+    const standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
 
-            return matchesType && matchesMonth && matchesYear;
+    const satelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 19,
+        attribution: '© Google'
+    });
+
+    // Event type to color mapping
+    const eventTypeColors = {
+        'Comedy': 'blue',
+        'Festival': 'green',
+        'Sports': 'red',
+        'Music': 'purple',
+        'Halloween': 'orange',
+        'Workshop': 'yellow',
+        'Social': 'pink',
+        'Dance': 'teal',
+        'Film': 'brown',
+        'Theatre': 'grey',
+        'Broadcast': 'black',
+        'Exhibition': 'cyan'
+    };
+
+    // Add the legend to the map
+    const legend = L.control({ position: 'topright' });
+    legend.onAdd = function() {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = `
+            <h6>Event Types</h6>
+            <div class="legend-items">
+                ${Object.entries(eventTypeColors).map(([type, color]) => `
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: ${color};"></span>
+                        ${type}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        return div;
+    };
+    legend.addTo(map);
+
+    // Function to add markers to the map
+    function addMarkers(events) {
+        // Clear existing markers
+        map.eachLayer((layer) => {
+            if (layer instanceof L.CircleMarker) {
+                map.removeLayer(layer);
+            }
         });
 
-        addMarkers(filteredEvents); // Update the markers with filtered events
+        // Add new markers
+        events.forEach(event => {
+            const color = eventTypeColors[event.eventType] || 'gray';
+            const isFavorite = favorites.includes(event.id.toString());
+            const marker = L.circleMarker([event.latitude, event.longitude], {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.7,
+                radius: 8,
+                className: isFavorite ? 'favorite-marker' : ''
+            }).addTo(map);
+
+            marker.bindPopup(`
+                <strong>${event.title}</strong><br>
+                Type: ${event.eventType}<br>
+                Date: ${event.start_date.toLocaleDateString()}<br>
+                <a href="${event.detailUrl}">View Details</a>
+            `);
+        });
     }
 
-    // Event listeners for the filters
+    // Function to update grid view
+    function updateGridView(events) {
+        const gridView = document.getElementById('gridView');
+        gridView.innerHTML = '';
+
+        events.forEach(event => {
+            const isFavorite = favorites.includes(event.id.toString());
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            card.innerHTML = `
+                <img src="/static/images/event-placeholder.jpg" class="event-image" alt="${event.title}">
+                <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                      onclick="toggleFavorite(${event.id})" 
+                      title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                    ${isFavorite ? '❤️' : '🤍'}
+                </span>
+                <div class="event-content">
+                    <h3 class="event-title">${event.title}</h3>
+                    <p class="event-date">${event.start_date.toLocaleDateString()}</p>
+                    <p class="event-type">${event.eventType}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="${event.detailUrl}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            `;
+            gridView.appendChild(card);
+        });
+    }
+
+    // Favorites functionality
+    let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
+    const favoritesToggle = document.getElementById('favoritesToggle');
+    let showingFavorites = false;
+
+    function toggleFavorite(eventId) {
+        console.log('Toggling favorite for event:', eventId);
+        const idStr = eventId.toString();
+        const index = favorites.indexOf(idStr);
+        
+        const favoriteBtn = document.querySelector(`[onclick="toggleFavorite(${eventId})"]`);
+        
+        if (index === -1) {
+            favorites.push(idStr);
+            if (favoriteBtn) {
+                favoriteBtn.innerHTML = '❤️';
+                favoriteBtn.title = 'Remove from favorites';
+            }
+        } else {
+            favorites.splice(index, 1);
+            if (favoriteBtn) {
+                favoriteBtn.innerHTML = '🤍';
+                favoriteBtn.title = 'Add to favorites';
+            }
+        }
+        
+        localStorage.setItem('favoriteEvents', JSON.stringify(favorites));
+        
+        if (favoriteBtn) {
+            favoriteBtn.classList.toggle('active');
+        }
+        
+        if (showingFavorites) {
+            const favoriteEvents = eventData.filter(event => 
+                favorites.includes(event.id.toString())
+            );
+            addMarkers(favoriteEvents);
+            updateGridView(favoriteEvents);
+        }
+    }
+
+    favoritesToggle.addEventListener('click', function() {
+        console.log('Favorites toggle clicked');
+        showingFavorites = !showingFavorites;
+        favoritesToggle.classList.toggle('active');
+        
+        if (showingFavorites) {
+            const favoriteEvents = eventData.filter(event => 
+                favorites.includes(event.id.toString())
+            );
+            addMarkers(favoriteEvents);
+            updateGridView(favoriteEvents);
+        } else {
+            addMarkers(eventData);
+            updateGridView(eventData);
+        }
+    });
+
+    // Filter functionality
+    function filterEvents() {
+        console.log('Filtering events...');
+        const typeFilter = document.getElementById('eventTypeFilter').value;
+        const monthFilter = document.getElementById('monthFilter').value;
+        const yearFilter = document.getElementById('yearFilter').value;
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+        console.log('Filters:', { typeFilter, monthFilter, yearFilter, searchTerm });
+
+        const filteredEvents = eventData.filter(event => {
+            const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
+            const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
+            const matchesYear = yearFilter === 'all' || event.start_date.getFullYear() === parseInt(yearFilter);
+            const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
+                                event.eventType.toLowerCase().includes(searchTerm);
+
+            return matchesType && matchesMonth && matchesYear && matchesSearch;
+        });
+
+        console.log('Filtered events:', filteredEvents);
+        addMarkers(filteredEvents);
+        updateGridView(filteredEvents);
+    }
+
+    // Add filter event listeners
     document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
     document.getElementById('monthFilter').addEventListener('change', filterEvents);
     document.getElementById('yearFilter').addEventListener('change', filterEvents);
+    document.getElementById('searchInput').addEventListener('input', filterEvents);
 
-    // JavaScript for Alphabetical Sorting
-        document.addEventListener("DOMContentLoaded", function() {
-            var eventList = document.querySelector(".event-list");
-            var items = Array.from(eventList.children);
+    // Initialize markers and grid
+    addMarkers(eventData);
+    updateGridView(eventData);
 
-            // Sort items alphabetically by the data-title attribute
-            items.sort(function(a, b) {
-                var titleA = a.getAttribute("data-title").toLowerCase();
-                var titleB = b.getAttribute("data-title").toLowerCase();
-                return titleA.localeCompare(titleB);
-            });
+    // Add debug logging
+    console.log('Initial event data:', eventData);
 
-            // Append sorted items back to the list
-            items.forEach(function(item) {
-                eventList.appendChild(item);
-            });
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', filterEvents);
+
+    // Dark mode toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.textContent = '🌙'; // Set initial moon icon
+    
+    themeToggle.addEventListener('click', function() {
+        console.log('Dark mode toggle clicked');
+        document.body.classList.toggle('dark-mode');
+        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+
+    // View toggle functionality
+    const mapViewBtn = document.getElementById('mapViewBtn');
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const mapView = document.getElementById('mapView');
+    const gridView = document.getElementById('gridView');
+
+    mapViewBtn.addEventListener('click', function() {
+        console.log('Map view clicked');
+        mapView.style.display = 'block';
+        gridView.style.display = 'none';
+        mapViewBtn.classList.add('active');
+        gridViewBtn.classList.remove('active');
+        map.invalidateSize();
+    });
+
+    gridViewBtn.addEventListener('click', function() {
+        console.log('Grid view clicked');
+        mapView.style.display = 'none';
+        gridView.style.display = 'grid';
+        mapViewBtn.classList.remove('active');
+        gridViewBtn.classList.add('active');
+        updateGridView(eventData);
+    });
+
+    // Add map type control to bottom left
+    const mapTypeControl = L.control({ position: 'bottomleft' });
+    mapTypeControl.onAdd = function() {
+        const div = L.DomUtil.create('div', 'map-type-control');
+        div.innerHTML = `
+            <select class="form-control" id="mapTypeSelect">
+                <option value="standard">Standard Map</option>
+                <option value="satellite">Satellite View</option>
+            </select>
+        `;
+        
+        // Add event listener after the control is created
+        const select = div.querySelector('select');
+        select.addEventListener('change', function(e) {
+            if (e.target.value === 'satellite') {
+                map.removeLayer(standardLayer);
+                satelliteLayer.addTo(map);
+            } else {
+                map.removeLayer(satelliteLayer);
+                standardLayer.addTo(map);
+            }
         });
-</script>
+        
+        return div;
+    };
+    mapTypeControl.addTo(map);
 
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize markers and grid
+        addMarkers(eventData);
+        updateGridView(eventData);
+
+        // Add all event listeners here
+        // ... (all the event listeners from above)
+    });
+
+</script>
 </body>
 </html>
+
