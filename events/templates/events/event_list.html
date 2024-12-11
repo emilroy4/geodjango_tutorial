@@ -406,6 +406,92 @@
             50% { opacity: 1; }
             100% { opacity: 0.7; }
         }
+
+        .past-event {
+        position: relative;
+        opacity: 0.6;
+    }
+
+    .past-event::after {
+        content: "Event Over";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: yellow;
+        color: black;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        pointer-events: none;
+        border: 2px solid black;
+    }
+
+
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        margin-left: 10px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .btn {
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .active-view {
+        background-color: #007bff; /* Active color */
+        color: white;
+    }
+
+    .inactive-view {
+        background-color: #6c757d; /* Inactive color */
+        color: white;
+    }
+
+
+
     </style>
 </head>
 <body>
@@ -418,7 +504,6 @@
                 <button id="gridViewBtn" class="btn btn-secondary btn-sm">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
-                <a href="#" class="btn btn-primary btn-sm">Login</a>
             </div>
         </div>
 
@@ -443,6 +528,11 @@
                 {% endfor %}
             </select>
             <input type="text" class="form-control search-bar" id="searchInput" placeholder="Search events...">
+            <label class="switch">
+                <input type="checkbox" id="upcomingToggle">
+                <span class="slider"></span>
+            </label>
+            <span>Show Upcoming Only</span>
         </div>
 
         <div id="mapView">
@@ -561,9 +651,14 @@
 
         events.forEach(event => {
             const isFavorite = favorites.includes(event.id.toString());
+            const isPast = event.start_date < new Date();
             const card = document.createElement('div');
             card.className = 'event-card';
             
+            if (isPast) {
+                card.classList.add('past-event');
+            }
+
             card.innerHTML = `
                 <img src="/static/images/event-placeholder.jpg" class="event-image" alt="${event.title}">
                 <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
@@ -629,6 +724,8 @@
         console.log('Favorites toggle clicked');
         showingFavorites = !showingFavorites;
         favoritesToggle.classList.toggle('active');
+        filterEvents();
+    });
         
         if (showingFavorites) {
             const favoriteEvents = eventData.filter(event => 
@@ -640,9 +737,17 @@
             addMarkers(eventData);
             updateGridView(eventData);
         }
-    });
+    
 
     // Filter functionality
+    const upcomingToggle = document.getElementById('upcomingToggle');
+    let showUpcomingOnly = false;
+
+    upcomingToggle.addEventListener('change', function() {
+        showUpcomingOnly = upcomingToggle.checked;
+        filterEvents();
+    });
+
     function filterEvents() {
         console.log('Filtering events...');
         const typeFilter = document.getElementById('eventTypeFilter').value;
@@ -650,19 +755,21 @@
         const yearFilter = document.getElementById('yearFilter').value;
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-        console.log('Filters:', { typeFilter, monthFilter, yearFilter, searchTerm });
-
-        const filteredEvents = eventData.filter(event => {
+        let filteredEvents = eventData.filter(event => {
             const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
             const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
             const matchesYear = yearFilter === 'all' || event.start_date.getFullYear() === parseInt(yearFilter);
             const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
-                                event.eventType.toLowerCase().includes(searchTerm);
+                                  event.eventType.toLowerCase().includes(searchTerm);
+            const isUpcoming = !showUpcomingOnly || event.start_date >= new Date();
 
-            return matchesType && matchesMonth && matchesYear && matchesSearch;
+            return matchesType && matchesMonth && matchesYear && matchesSearch && isUpcoming;
         });
 
-        console.log('Filtered events:', filteredEvents);
+        if (showingFavorites) {
+            filteredEvents = filteredEvents.filter(event => favorites.includes(event.id.toString()));
+        }
+
         addMarkers(filteredEvents);
         updateGridView(filteredEvents);
     }
@@ -704,18 +811,23 @@
         console.log('Map view clicked');
         mapView.style.display = 'block';
         gridView.style.display = 'none';
-        mapViewBtn.classList.add('active');
-        gridViewBtn.classList.remove('active');
+        mapViewBtn.classList.add('active-view');
+        mapViewBtn.classList.remove('inactive-view');
+        gridViewBtn.classList.remove('active-view');
+        gridViewBtn.classList.add('inactive-view');
         map.invalidateSize();
+        filterEvents(); // Apply filter when switching to map view
     });
 
     gridViewBtn.addEventListener('click', function() {
         console.log('Grid view clicked');
         mapView.style.display = 'none';
         gridView.style.display = 'grid';
-        mapViewBtn.classList.remove('active');
-        gridViewBtn.classList.add('active');
-        updateGridView(eventData);
+        gridViewBtn.classList.add('active-view');
+        gridViewBtn.classList.remove('inactive-view');
+        mapViewBtn.classList.remove('active-view');
+        mapViewBtn.classList.add('inactive-view');
+        filterEvents(); // Apply filter when switching to grid view
     });
 
     // Add map type control to bottom left
