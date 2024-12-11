@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -498,7 +499,9 @@
     <div class="app-container">
         <!-- Update the header section -->
         <div class="header">
-            <div class="header-title">Ireland Events</div>
+            <div class="header-title">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 40px;">
+            </div>
             <div class="header-controls">
                 <button id="mapViewBtn" class="btn btn-primary btn-sm active">Map</button>
                 <button id="gridViewBtn" class="btn btn-secondary btn-sm">Grid</button>
