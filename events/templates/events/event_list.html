@@ -572,6 +572,7 @@
                 "longitude": {{ event.longitude }},
                 "eventType": "{{ event.event_type|escapejs }}",
                 "start_date": new Date("{{ event.start_date|date:'Y-m-d' }}"),
+                "imageUrl": "{{ event.image_url|default:'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png' }}",
                 "detailUrl": "{% url 'event_detail' event.pk %}"
             }{% if not forloop.last %},{% endif %}
         {% endfor %}
