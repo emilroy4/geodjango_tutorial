@@ -655,13 +655,15 @@
             }).addTo(map);
 
             marker.bindPopup(`
-                
-                "imageUrl": "{{ event.image_url|default:'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png' }}",
-                <strong>${event.title}</strong><br>
-                Type: ${event.eventType}<br>
-                Date: ${event.start_date.toLocaleDateString()}<br>
-                <a href="${event.detailUrl}">View Details</a>
-            `);
+    <div style="text-align: center;">
+        <img src="${event.imageUrl}" alt="${event.title}" style="width: 100%; max-width: 200px; height: auto; border-radius: 8px; margin-bottom: 8px;">
+        <strong>${event.title}</strong><br>
+        Type: ${event.eventType}<br>
+        Date: ${event.start_date.toLocaleDateString()}<br>
+        <a href="${event.detailUrl}" target="_blank" style="color: #007bff; text-decoration: none;">View Details</a>
+    </div>
+`);
+
         });
     }
 
