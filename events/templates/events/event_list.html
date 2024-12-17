@@ -490,8 +490,12 @@
         background-color: #6c757d; /* Inactive color */
         color: white;
     }
-
-
+	
+	.logo {
+    height: 60px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 10px;
+}
 
     </style>
 </head>
@@ -500,7 +504,10 @@
         <!-- Update the header section -->
         <div class="header">
             <div class="header-title">
-                <img src="{% static 'images/logo.png' %}"/>
+                <div class="header-title">
+    <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
+</div>
+
             </div>
             <div class="header-controls">
                 <button id="mapViewBtn" class="btn btn-primary btn-sm active">Map</button>
