@@ -677,7 +677,8 @@
         const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
 
         card.innerHTML = `
-            <img src="${imageUrl}" class="event-image" alt="${event.title}">
+                 <img src="${event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png'}" class="event-image" alt="${event.title}">
+                 
                 <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
                       onclick="toggleFavorite(${event.id})" 
                       title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
