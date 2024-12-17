@@ -1,12 +1,16 @@
+from django.conf import settings
 import requests
 
 def fetch_image_from_google(query):
-    api_key = 'AIzaSyCc3u3VoEUngJ2iAVFSMnkmtfrBNrt52Jo'
-    search_engine_id = '153795a42ec054306'
+    api_key = settings.GOOGLE_API_KEY
+    search_engine_id = settings.GOOGLE_SEARCH_ENGINE_ID
     search_url = "https://www.googleapis.com/customsearch/v1"
 
+    # Exclude images from Facebook using -site:facebook.com
+    query_with_exclusions = f"{query} -site:facebook.com"
+
     params = {
-        "q": query,
+        "q": query_with_exclusions,  # Query with exclusions
         "cx": search_engine_id,
         "key": api_key,
         "searchType": "image",
@@ -21,11 +25,8 @@ def fetch_image_from_google(query):
         # Get the first image URL from the results
         if 'items' in search_results:
             return search_results['items'][0]['link']
+        else:
+            print(f"No images found for query: {query}")
     except requests.RequestException as e:
-        print(f"Error fetching image from Google: {e}")
+        print(f"Error fetching image: {e}")
     return None
-
-# Example usage
-image_url = fetch_image_from_google("music concert")
-if image_url:
-    print(f"Fetched image URL: {image_url}")
