@@ -674,7 +674,7 @@
         }
 
         // Use event image if available, otherwise use the S3 placeholder image
-        const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
+        //const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
 
         card.innerHTML = `
                  <img src="${event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png'}" class="event-image" alt="${event.title}">
