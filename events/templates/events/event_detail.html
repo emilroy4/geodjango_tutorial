@@ -7,6 +7,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
+        /* General Styles */
         body {
             background-color: #f9f9f9;
             color: #333;
@@ -74,6 +75,21 @@
         .social-icons a:hover {
             color: #007bff;
         }
+        .google-search-btn {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #4285f4;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-decoration: none;
+        }
+        .google-search-btn:hover {
+            background-color: #3367d6;
+        }
         .dark-mode {
             background-color: #121212;
             color: #f1f1f1;
@@ -127,21 +143,12 @@
         <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
         <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
         <p><strong>Phone:</strong> {{ object.contact_phone_number|default:"No phone number" }}</p>
-        <p><strong>Booking Phone:</strong> {{ object.booking_phone_number|default:"No phone number" }}</p>
-        <p><strong>Website:</strong> 
-            {% if object.url %}
-                <a href="{{ object.url }}" target="_blank">{{ object.url }}</a>
-            {% else %}
-                Not available
-            {% endif %}
-        </p>
-        <p><strong>Price:</strong> 
-            {% if object.price %}
-                €{{ object.price }}
-            {% else %}
-                Free to visit
-            {% endif %}
-        </p>
+        <p><strong>Price:</strong> {{ object.price|default:"Free to visit" }}</p>
+
+        <!-- Search on Google Button -->
+        <a href="https://www.google.com/search?q={{ object.title|urlencode }}" target="_blank" class="google-search-btn">
+            Search "{{ object.title }}" on Google
+        </a>
 
         <!-- Social Media Share -->
         <div class="social-icons">
