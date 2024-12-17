@@ -690,24 +690,8 @@
         'Exhibition': 'cyan'
     };
 
-    // Add legend to the map
-    const legend = L.control({ position: 'topright' });
-    legend.onAdd = function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML = `
-            <h6>Event Types</h6>
-            <div class="legend-items">
-                ${Object.entries(eventTypeColors).map(([type, color]) => `
-                    <div class="legend-item">
-                        <span class="legend-color" style="background: ${color};"></span>
-                        ${type}
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        return div;
-    };
-    legend.addTo(map);
+    // Favorites functionality
+    let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
 
     // Function to add markers
     function addMarkers(events) {
@@ -719,11 +703,14 @@
 
         events.forEach(event => {
             const color = eventTypeColors[event.eventType] || 'gray';
+            const isFavorite = favorites.includes(event.id.toString());
+
             const marker = L.circleMarker([event.latitude, event.longitude], {
                 color: color,
                 fillColor: color,
                 fillOpacity: 0.7,
-                radius: 8
+                radius: isFavorite ? 10 : 8,
+                className: isFavorite ? 'favorite-marker' : ''
             }).addTo(map);
 
             marker.bindPopup(`
@@ -741,6 +728,7 @@
         gridView.innerHTML = '';
 
         events.forEach(event => {
+            const isFavorite = favorites.includes(event.id.toString());
             const card = document.createElement('div');
             card.className = 'event-card';
             card.innerHTML = `
@@ -749,23 +737,37 @@
                     <h3 class="event-title">${event.title}</h3>
                     <p class="event-date">${event.start_date.toLocaleDateString()}</p>
                     <p class="event-type">${event.eventType}</p>
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                            onclick="toggleFavorite(${event.id})">
+                        ${isFavorite ? '❤️' : '🤍'}
+                    </button>
                 </div>
             `;
             gridView.appendChild(card);
         });
     }
 
-    // Filtering
+    // Toggle favorite events
+    function toggleFavorite(eventId) {
+        const index = favorites.indexOf(eventId.toString());
+        if (index === -1) {
+            favorites.push(eventId.toString());
+        } else {
+            favorites.splice(index, 1);
+        }
+        localStorage.setItem('favoriteEvents', JSON.stringify(favorites));
+        filterEvents();
+    }
+
+    // Filtering events
     function filterEvents() {
         const typeFilter = document.getElementById('eventTypeFilter').value;
-        const monthFilter = document.getElementById('monthFilter').value;
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-        const filteredEvents = eventData.filter(event => {
+        let filteredEvents = eventData.filter(event => {
             const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
-            const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
             const matchesSearch = event.title.toLowerCase().includes(searchTerm);
-            return matchesType && matchesMonth && matchesSearch;
+            return matchesType && matchesSearch;
         });
 
         addMarkers(filteredEvents);
@@ -773,10 +775,9 @@
     }
 
     document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
-    document.getElementById('monthFilter').addEventListener('change', filterEvents);
     document.getElementById('searchInput').addEventListener('input', filterEvents);
 
-    // View toggling
+    // Map/Grid Toggle
     const mapViewBtn = document.getElementById('mapViewBtn');
     const gridViewBtn = document.getElementById('gridViewBtn');
     const mapView = document.getElementById('mapView');
@@ -797,16 +798,46 @@
         mapViewBtn.style.backgroundColor = "#6c757d";
     });
 
-    // Initialize markers and grid
-    addMarkers(eventData);
-    updateGridView(eventData);
+    // Dark mode toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
 
-    // Logo hover effect (CSS styles apply this effect)
+    // Add map type control
+    const mapTypeControl = L.control({ position: 'bottomleft' });
+    mapTypeControl.onAdd = function() {
+        const div = L.DomUtil.create('div', 'map-type-control');
+        div.innerHTML = `
+            <select class="form-control" id="mapTypeSelect">
+                <option value="standard">Standard Map</option>
+                <option value="satellite">Satellite View</option>
+            </select>
+        `;
+        div.querySelector('select').addEventListener('change', (e) => {
+            if (e.target.value === 'satellite') {
+                map.removeLayer(standardLayer);
+                satelliteLayer.addTo(map);
+            } else {
+                map.removeLayer(satelliteLayer);
+                standardLayer.addTo(map);
+            }
+        });
+        return div;
+    };
+    mapTypeControl.addTo(map);
+
+    // Logo hover effect
     const logo = document.querySelector('.logo');
     logo.addEventListener('mouseenter', () => logo.style.transform = 'scale(1.1)');
     logo.addEventListener('mouseleave', () => logo.style.transform = 'scale(1)');
 
+    // Initialize
+    addMarkers(eventData);
+    updateGridView(eventData);
 </script>
+
 
 
 </body>
