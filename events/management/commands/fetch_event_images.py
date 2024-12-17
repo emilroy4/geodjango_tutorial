@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from events.models import Event
-from events.importimages import fetch_image_from_pexels
+from events.utils.importimages import fetch_image_from_pexels  # Corrected import path
 
 class Command(BaseCommand):
     help = 'Fetch images for events from Pexels'
