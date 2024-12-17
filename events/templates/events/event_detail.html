@@ -6,59 +6,95 @@
     <title>{{ object.title }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* General Styles */
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .event-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        /* Logo Styling */
+        .logo {
+            height: 60px;
+            margin-bottom: 20px;
+        }
+        /* Event Image */
+        .event-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 0 auto 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+        .dark-mode .event-card {
+            background-color: #1e1e1e;
+            border-color: #333;
+            color: #f1f1f1;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode a {
+            color: #90caf9;
+        }
+        /* Dark Mode Button */
+        .dark-mode-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .dark-mode-btn:hover {
+            background: #555;
+        }
+        /* Map */
         #map {
             height: 300px;
             width: 100%;
             margin-bottom: 20px;
-        }
-        .event-card {
-            border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .event-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .back-link {
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .social-icons a {
-            margin-right: 10px;
-            font-size: 24px;
-            color: #555;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .social-icons a:hover {
-            color: #007bff;
-        }
-        .google-search-btn {
-            display: block;
-            margin-top: 15px;
         }
     </style>
-    <!-- Include Font Awesome for Social Media Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
-<body class="container my-5">
-    <!-- Back Button -->
-    <a href="{% url 'event_list' %}" class="back-link btn btn-secondary">&larr; Back to Event List</a>
+<body class="container">
+    <!-- Dark Mode Toggle Button -->
+    <button id="darkModeToggle" class="dark-mode-btn">🌙 Dark Mode</button>
 
+    <!-- Logo -->
+    <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Website Logo" class="logo">
+
+    <!-- Back Button -->
+    <a href="{% url 'event_list' %}" class="btn btn-secondary mb-3">&larr; Back to Event List</a>
+
+    <!-- Event Details -->
     <div class="event-card">
-        <!-- Event Image -->
         {% if object.image_url %}
             <img src="{{ object.image_url }}" alt="{{ object.title }}" class="event-image">
         {% else %}
             <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png" alt="Image not available" class="event-image">
         {% endif %}
 
-        <!-- Event Title -->
         <h1 class="mb-3">{{ object.title }}</h1>
         <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y" }}</p>
         <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
@@ -67,18 +103,15 @@
             <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
         </p>
 
-        <!-- Embedded Map -->
+        <!-- Map -->
         <div id="map"></div>
 
         <p><strong>Description:</strong> {{ object.description }}</p>
         <p><strong>Event Type:</strong> {{ object.event_type }}</p>
-        <p><strong>Organizer:</strong> {{ object.organizer }}</p> <!-- Adjust if you have an organizer field -->
-        <p><strong>More Info:</strong> <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p> <!-- Adjust if you have a URL field -->
+        <p><strong>Organizer:</strong> {{ object.organizer }}</p>
+        <p><strong>More Info:</strong> <a href="{{ object.url }}" target="_blank">{{ object.url }}</a></p>
 
-        <!-- Search on Google Button -->
-        <a href="https://www.google.com/search?q={{ object.title | urlencode }}" target="_blank" class="btn btn-info google-search-btn">Search on Google</a>
-
-        <!-- Social Media Share Icons -->
+        <!-- Social Media Share -->
         <div class="social-icons mt-4">
             <strong>Share this event:</strong>
             <a href="https://www.facebook.com/sharer/sharer.php?u={{ object.url }}" target="_blank"><i class="fab fa-facebook"></i></a>
@@ -87,7 +120,7 @@
         </div>
     </div>
 
-    <!-- Leaflet.js for Map -->
+    <!-- Leaflet Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
@@ -102,6 +135,13 @@
         L.marker([{{ object.latitude }}, {{ object.longitude }}]).addTo(map)
             .bindPopup("<strong>{{ object.title }}</strong><br>{{ object.latitude }}, {{ object.longitude }}")
             .openPopup();
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
     </script>
 </body>
 </html>
