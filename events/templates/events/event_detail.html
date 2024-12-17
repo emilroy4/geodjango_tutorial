@@ -13,12 +13,18 @@
             color: #333;
             transition: background-color 0.5s, color 0.5s;
         }
+
         /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+        }
+        .top-bar .center-logo {
+            flex: 1;
+            display: flex;
+            justify-content: center;
         }
         .logo {
             height: 50px;
@@ -38,6 +44,7 @@
             background: #555;
             transform: scale(1.1);
         }
+
         /* Grid Layout */
         .grid-container {
             display: grid;
@@ -59,6 +66,7 @@
         #map {
             min-height: 400px;
         }
+
         /* Event Details */
         .event-details {
             text-align: center;
@@ -67,6 +75,13 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .event-details p {
+            margin: 5px 0;
+        }
+        .event-details strong {
+            font-weight: bold;
+        }
+
         /* Social Media Icons */
         .social-icons {
             display: flex;
@@ -82,6 +97,7 @@
         .social-icons a:hover {
             color: #007bff;
         }
+
         /* Dark Mode */
         .dark-mode {
             background-color: #121212;
@@ -104,9 +120,11 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <a href="{% url 'event_list' %}" class="btn btn-secondary">&larr; Back to Event List</a>
-        <a href="https://yourwebsite.com">
-            <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
-        </a>
+        <div class="center-logo">
+            <a href="{% url 'event_list' %}">
+                <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
+            </a>
+        </div>
         <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
     </div>
 
@@ -132,7 +150,16 @@
         <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
         <p><strong>Event Type:</strong> {{ object.event_type }}</p>
         <p><strong>Description:</strong> {{ object.description }}</p>
-        <p><strong>Organizer:</strong> {{ object.organizer }}</p>
+        <p><strong>Organiser:</strong> {{ object.organizer }}</p>
+        <p><strong>Venue:</strong> {{ object.venue }}</p>
+        <p><strong>Phone:</strong> {{ object.phone_number }}</p>
+        <p><strong>Price:</strong> 
+            {% if object.price == 0 %}
+                Free to visit
+            {% else %}
+                €{{ object.price }}
+            {% endif %}
+        </p>
         <p>
             <strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}
             <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
