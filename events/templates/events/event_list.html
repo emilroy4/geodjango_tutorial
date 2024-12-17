@@ -709,7 +709,7 @@
     };
     legend.addTo(map);
 
-    // Function to add markers to the map
+    // Function to add markers
     function addMarkers(events) {
         map.eachLayer((layer) => {
             if (layer instanceof L.CircleMarker) {
@@ -735,43 +735,79 @@
         });
     }
 
-    // Initialize Map and Grid View
+    // Grid view update
+    function updateGridView(events) {
+        const gridView = document.getElementById('gridView');
+        gridView.innerHTML = '';
+
+        events.forEach(event => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+                <img src="/static/images/event-placeholder.jpg" class="event-image" alt="${event.title}">
+                <div class="event-content">
+                    <h3 class="event-title">${event.title}</h3>
+                    <p class="event-date">${event.start_date.toLocaleDateString()}</p>
+                    <p class="event-type">${event.eventType}</p>
+                </div>
+            `;
+            gridView.appendChild(card);
+        });
+    }
+
+    // Filtering
+    function filterEvents() {
+        const typeFilter = document.getElementById('eventTypeFilter').value;
+        const monthFilter = document.getElementById('monthFilter').value;
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+        const filteredEvents = eventData.filter(event => {
+            const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
+            const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
+            const matchesSearch = event.title.toLowerCase().includes(searchTerm);
+            return matchesType && matchesMonth && matchesSearch;
+        });
+
+        addMarkers(filteredEvents);
+        updateGridView(filteredEvents);
+    }
+
+    document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
+    document.getElementById('monthFilter').addEventListener('change', filterEvents);
+    document.getElementById('searchInput').addEventListener('input', filterEvents);
+
+    // View toggling
     const mapViewBtn = document.getElementById('mapViewBtn');
     const gridViewBtn = document.getElementById('gridViewBtn');
     const mapView = document.getElementById('mapView');
     const gridView = document.getElementById('gridView');
 
-    function toggleView(activeBtn, inactiveBtn, activeView, inactiveView, activeColor, inactiveColor) {
-        activeBtn.classList.add('active');
-        activeBtn.style.backgroundColor = activeColor;
-        inactiveBtn.classList.remove('active');
-        inactiveBtn.style.backgroundColor = inactiveColor;
-
-        activeView.style.display = 'block';
-        inactiveView.style.display = 'none';
-
-        if (activeBtn === mapViewBtn) {
-            document.body.style.backgroundColor = "#e3f2fd"; // Light blue for map view
-            map.invalidateSize();
-        } else {
-            document.body.style.backgroundColor = "#f1f8e9"; // Light green for grid view
-        }
-    }
-
     mapViewBtn.addEventListener('click', () => {
-        toggleView(mapViewBtn, gridViewBtn, mapView, gridView, "#007bff", "#6c757d");
+        mapView.style.display = 'block';
+        gridView.style.display = 'none';
+        mapViewBtn.style.backgroundColor = "#007bff";
+        gridViewBtn.style.backgroundColor = "#6c757d";
+        map.invalidateSize();
     });
 
     gridViewBtn.addEventListener('click', () => {
-        toggleView(gridViewBtn, mapViewBtn, gridView, mapView, "#28a745", "#6c757d");
+        mapView.style.display = 'none';
+        gridView.style.display = 'grid';
+        gridViewBtn.style.backgroundColor = "#28a745";
+        mapViewBtn.style.backgroundColor = "#6c757d";
     });
 
-    // Initial view setup
-    toggleView(mapViewBtn, gridViewBtn, mapView, gridView, "#007bff", "#6c757d");
-
-    // Add markers initially
+    // Initialize markers and grid
     addMarkers(eventData);
+    updateGridView(eventData);
+
+    // Logo hover effect (CSS styles apply this effect)
+    const logo = document.querySelector('.logo');
+    logo.addEventListener('mouseenter', () => logo.style.transform = 'scale(1.1)');
+    logo.addEventListener('mouseleave', () => logo.style.transform = 'scale(1)');
+
 </script>
+
 
 </body>
 </html>
