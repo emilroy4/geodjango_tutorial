@@ -490,99 +490,12 @@
         background-color: #6c757d; /* Inactive color */
         color: white;
     }
-
-	    .header-title img.logo {
-            height: 60px; /* Fixed height for desktop */
-            width: auto;
-        }
 	
-/* Mobile-first styles */
-    body {
-        background-color: #f5f5f5;
-        padding: 0 15px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .app-container {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin: 15px auto;
-        overflow: hidden;
-    }
-
-    /* Header section */
-    .header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.8rem;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .header-title img.logo {
-        height: 60px; /* Fixed height for desktop */
-        width: auto;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-    }
-
-    /* Logo hover effect */
-    .header-title img.logo:hover {
-        transform: scale(1.1); /* Slight pop-out effect */
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .header-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .header-controls .btn {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-        transition: background-color 0.3s, color 0.3s;
-        border-radius: 5px;
-    }
-
-    /* Active button state */
-    .header-controls .btn.active {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    /* Inactive button state */
-    .header-controls .btn.inactive {
-        background-color: #6c757d;
-        color: #fff;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-        .header {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .header-title img.logo {
-            height: 50px; /* Smaller logo for mobile */
-        }
-
-        .header-controls {
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .header-controls .btn {
-            flex: none;
-        }
-    }
-
+	.logo {
+    height: 60px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 10px;
+}
 
     </style>
 </head>
@@ -642,7 +555,9 @@
     </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
+    <script>
+
+
     // Event data from Django
     const eventData = [
         {% for event in events %}
@@ -660,7 +575,7 @@
 
     console.log('Event Data:', eventData);
 
-    // Initialize map
+    // Initialize map first
     const map = L.map('map').setView([53.349805, -6.26031], 7);
 
     // Base layers
@@ -690,26 +605,43 @@
         'Exhibition': 'cyan'
     };
 
-    // Favorites functionality
-    let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
+    // Add the legend to the map
+    const legend = L.control({ position: 'topright' });
+    legend.onAdd = function() {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = `
+            <h6>Event Types</h6>
+            <div class="legend-items">
+                ${Object.entries(eventTypeColors).map(([type, color]) => `
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: ${color};"></span>
+                        ${type}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        return div;
+    };
+    legend.addTo(map);
 
-    // Function to add markers
+    // Function to add markers to the map
     function addMarkers(events) {
+        // Clear existing markers
         map.eachLayer((layer) => {
             if (layer instanceof L.CircleMarker) {
                 map.removeLayer(layer);
             }
         });
 
+        // Add new markers
         events.forEach(event => {
             const color = eventTypeColors[event.eventType] || 'gray';
             const isFavorite = favorites.includes(event.id.toString());
-
             const marker = L.circleMarker([event.latitude, event.longitude], {
                 color: color,
                 fillColor: color,
                 fillOpacity: 0.7,
-                radius: isFavorite ? 10 : 8,
+                radius: 8,
                 className: isFavorite ? 'favorite-marker' : ''
             }).addTo(map);
 
@@ -722,90 +654,193 @@
         });
     }
 
-    // Grid view update
+    // Function to update grid view
     function updateGridView(events) {
         const gridView = document.getElementById('gridView');
         gridView.innerHTML = '';
 
         events.forEach(event => {
             const isFavorite = favorites.includes(event.id.toString());
+            const isPast = event.start_date < new Date();
             const card = document.createElement('div');
             card.className = 'event-card';
+            
+            if (isPast) {
+                card.classList.add('past-event');
+            }
+
             card.innerHTML = `
                 <img src="/static/images/event-placeholder.jpg" class="event-image" alt="${event.title}">
+                <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                      onclick="toggleFavorite(${event.id})" 
+                      title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                    ${isFavorite ? '❤️' : '🤍'}
+                </span>
                 <div class="event-content">
                     <h3 class="event-title">${event.title}</h3>
                     <p class="event-date">${event.start_date.toLocaleDateString()}</p>
                     <p class="event-type">${event.eventType}</p>
-                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
-                            onclick="toggleFavorite(${event.id})">
-                        ${isFavorite ? '❤️' : '🤍'}
-                    </button>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="${event.detailUrl}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
                 </div>
             `;
             gridView.appendChild(card);
         });
     }
 
-    // Toggle favorite events
+    // Favorites functionality
+    let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
+    const favoritesToggle = document.getElementById('favoritesToggle');
+    let showingFavorites = false;
+
     function toggleFavorite(eventId) {
-        const index = favorites.indexOf(eventId.toString());
+        console.log('Toggling favorite for event:', eventId);
+        const idStr = eventId.toString();
+        const index = favorites.indexOf(idStr);
+        
+        const favoriteBtn = document.querySelector(`[onclick="toggleFavorite(${eventId})"]`);
+        
         if (index === -1) {
-            favorites.push(eventId.toString());
+            favorites.push(idStr);
+            if (favoriteBtn) {
+                favoriteBtn.innerHTML = '❤️';
+                favoriteBtn.title = 'Remove from favorites';
+            }
         } else {
             favorites.splice(index, 1);
+            if (favoriteBtn) {
+                favoriteBtn.innerHTML = '🤍';
+                favoriteBtn.title = 'Add to favorites';
+            }
         }
+        
         localStorage.setItem('favoriteEvents', JSON.stringify(favorites));
-        filterEvents();
+        
+        if (favoriteBtn) {
+            favoriteBtn.classList.toggle('active');
+        }
+        
+        if (showingFavorites) {
+            const favoriteEvents = eventData.filter(event => 
+                favorites.includes(event.id.toString())
+            );
+            addMarkers(favoriteEvents);
+            updateGridView(favoriteEvents);
+        }
     }
 
-    // Filtering events
+    favoritesToggle.addEventListener('click', function() {
+        console.log('Favorites toggle clicked');
+        showingFavorites = !showingFavorites;
+        favoritesToggle.classList.toggle('active');
+        filterEvents();
+    });
+        
+        if (showingFavorites) {
+            const favoriteEvents = eventData.filter(event => 
+                favorites.includes(event.id.toString())
+            );
+            addMarkers(favoriteEvents);
+            updateGridView(favoriteEvents);
+        } else {
+            addMarkers(eventData);
+            updateGridView(eventData);
+        }
+    
+
+    // Filter functionality
+    const upcomingToggle = document.getElementById('upcomingToggle');
+    let showUpcomingOnly = false;
+
+    upcomingToggle.addEventListener('change', function() {
+        showUpcomingOnly = upcomingToggle.checked;
+        filterEvents();
+    });
+
     function filterEvents() {
+        console.log('Filtering events...');
         const typeFilter = document.getElementById('eventTypeFilter').value;
+        const monthFilter = document.getElementById('monthFilter').value;
+        const yearFilter = document.getElementById('yearFilter').value;
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
         let filteredEvents = eventData.filter(event => {
             const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
-            const matchesSearch = event.title.toLowerCase().includes(searchTerm);
-            return matchesType && matchesSearch;
+            const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
+            const matchesYear = yearFilter === 'all' || event.start_date.getFullYear() === parseInt(yearFilter);
+            const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
+                                  event.eventType.toLowerCase().includes(searchTerm);
+            const isUpcoming = !showUpcomingOnly || event.start_date >= new Date();
+
+            return matchesType && matchesMonth && matchesYear && matchesSearch && isUpcoming;
         });
+
+        if (showingFavorites) {
+            filteredEvents = filteredEvents.filter(event => favorites.includes(event.id.toString()));
+        }
 
         addMarkers(filteredEvents);
         updateGridView(filteredEvents);
     }
 
+    // Add filter event listeners
     document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
+    document.getElementById('monthFilter').addEventListener('change', filterEvents);
+    document.getElementById('yearFilter').addEventListener('change', filterEvents);
     document.getElementById('searchInput').addEventListener('input', filterEvents);
 
-    // Map/Grid Toggle
+    // Initialize markers and grid
+    addMarkers(eventData);
+    updateGridView(eventData);
+
+    // Add debug logging
+    console.log('Initial event data:', eventData);
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', filterEvents);
+
+    // Dark mode toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.textContent = '🌙'; // Set initial moon icon
+    
+    themeToggle.addEventListener('click', function() {
+        console.log('Dark mode toggle clicked');
+        document.body.classList.toggle('dark-mode');
+        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+
+    // View toggle functionality
     const mapViewBtn = document.getElementById('mapViewBtn');
     const gridViewBtn = document.getElementById('gridViewBtn');
     const mapView = document.getElementById('mapView');
     const gridView = document.getElementById('gridView');
 
-    mapViewBtn.addEventListener('click', () => {
+    mapViewBtn.addEventListener('click', function() {
+        console.log('Map view clicked');
         mapView.style.display = 'block';
         gridView.style.display = 'none';
-        mapViewBtn.style.backgroundColor = "#007bff";
-        gridViewBtn.style.backgroundColor = "#6c757d";
+        mapViewBtn.classList.add('active-view');
+        mapViewBtn.classList.remove('inactive-view');
+        gridViewBtn.classList.remove('active-view');
+        gridViewBtn.classList.add('inactive-view');
         map.invalidateSize();
+        filterEvents(); // Apply filter when switching to map view
     });
 
-    gridViewBtn.addEventListener('click', () => {
+    gridViewBtn.addEventListener('click', function() {
+        console.log('Grid view clicked');
         mapView.style.display = 'none';
         gridView.style.display = 'grid';
-        gridViewBtn.style.backgroundColor = "#28a745";
-        mapViewBtn.style.backgroundColor = "#6c757d";
+        gridViewBtn.classList.add('active-view');
+        gridViewBtn.classList.remove('inactive-view');
+        mapViewBtn.classList.remove('active-view');
+        mapViewBtn.classList.add('inactive-view');
+        filterEvents(); // Apply filter when switching to grid view
     });
 
-    // Dark mode toggle
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-
-    // Add map type control
+    // Add map type control to bottom left
     const mapTypeControl = L.control({ position: 'bottomleft' });
     mapTypeControl.onAdd = function() {
         const div = L.DomUtil.create('div', 'map-type-control');
@@ -815,7 +850,10 @@
                 <option value="satellite">Satellite View</option>
             </select>
         `;
-        div.querySelector('select').addEventListener('change', (e) => {
+        
+        // Add event listener after the control is created
+        const select = div.querySelector('select');
+        select.addEventListener('change', function(e) {
             if (e.target.value === 'satellite') {
                 map.removeLayer(standardLayer);
                 satelliteLayer.addTo(map);
@@ -824,22 +862,20 @@
                 standardLayer.addTo(map);
             }
         });
+        
         return div;
     };
     mapTypeControl.addTo(map);
 
-    // Logo hover effect
-    const logo = document.querySelector('.logo');
-    logo.addEventListener('mouseenter', () => logo.style.transform = 'scale(1.1)');
-    logo.addEventListener('mouseleave', () => logo.style.transform = 'scale(1)');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize markers and grid
+        addMarkers(eventData);
+        updateGridView(eventData);
 
-    // Initialize
-    addMarkers(eventData);
-    updateGridView(eventData);
+        // Add all event listeners here
+        // ... (all the event listeners from above)
+    });
+
 </script>
-
-
-
 </body>
 </html>
-
