@@ -7,24 +7,16 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        /* General Styles */
         body {
             background-color: #f9f9f9;
             color: #333;
             transition: background-color 0.5s, color 0.5s;
         }
-
-        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-        }
-        .top-bar .center-logo {
-            flex: 1;
-            display: flex;
-            justify-content: center;
         }
         .logo {
             height: 50px;
@@ -44,8 +36,6 @@
             background: #555;
             transform: scale(1.1);
         }
-
-        /* Grid Layout */
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -60,14 +50,9 @@
         }
         .grid-item img, #map {
             width: 100%;
-            height: 100%;
+            height: 400px;
             object-fit: cover;
         }
-        #map {
-            min-height: 400px;
-        }
-
-        /* Event Details */
         .event-details {
             text-align: center;
             padding: 20px;
@@ -75,14 +60,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .event-details p {
-            margin: 5px 0;
-        }
-        .event-details strong {
-            font-weight: bold;
-        }
-
-        /* Social Media Icons */
         .social-icons {
             display: flex;
             justify-content: center;
@@ -97,8 +74,6 @@
         .social-icons a:hover {
             color: #007bff;
         }
-
-        /* Dark Mode */
         .dark-mode {
             background-color: #121212;
             color: #f1f1f1;
@@ -120,11 +95,9 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <a href="{% url 'event_list' %}" class="btn btn-secondary">&larr; Back to Event List</a>
-        <div class="center-logo">
-            <a href="{% url 'event_list' %}">
-                <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
-            </a>
-        </div>
+        <a href="/">
+            <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
+        </a>
         <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
     </div>
 
@@ -146,23 +119,28 @@
     <!-- Event Details -->
     <div class="event-details">
         <h1 class="mb-3">{{ object.title }}</h1>
-        <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y" }}</p>
-        <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
-        <p><strong>Event Type:</strong> {{ object.event_type }}</p>
-        <p><strong>Description:</strong> {{ object.description }}</p>
-        <p><strong>Organiser:</strong> {{ object.organizer }}</p>
-        <p><strong>Venue:</strong> {{ object.venue }}</p>
-        <p><strong>Phone:</strong> {{ object.phone_number }}</p>
-        <p><strong>Price:</strong> 
-            {% if object.price == 0 %}
-                Free to visit
+        <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y H:i" }}</p>
+        <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y H:i" }}</p>
+        <p><strong>Event Type:</strong> {{ object.event_type|default:"N/A" }}</p>
+        <p><strong>Description:</strong> {{ object.description|default:"No description provided." }}</p>
+        <p><strong>Venue:</strong> {{ object.venue_name|default:"Not specified" }}</p>
+        <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
+        <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
+        <p><strong>Phone:</strong> {{ object.contact_phone_number|default:"No phone number" }}</p>
+        <p><strong>Booking Phone:</strong> {{ object.booking_phone_number|default:"No phone number" }}</p>
+        <p><strong>Website:</strong> 
+            {% if object.url %}
+                <a href="{{ object.url }}" target="_blank">{{ object.url }}</a>
             {% else %}
-                €{{ object.price }}
+                Not available
             {% endif %}
         </p>
-        <p>
-            <strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}
-            <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
+        <p><strong>Price:</strong> 
+            {% if object.price %}
+                €{{ object.price }}
+            {% else %}
+                Free to visit
+            {% endif %}
         </p>
 
         <!-- Social Media Share -->
