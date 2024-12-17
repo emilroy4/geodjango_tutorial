@@ -481,14 +481,17 @@
         transition: background-color 0.3s, color 0.3s;
     }
 
+    /* Button active/inactive styles */
     .active-view {
-        background-color: #007bff; /* Active color */
+        background-color: #007bff; /* Blue for active */
         color: white;
+        border: none;
     }
 
     .inactive-view {
-        background-color: #6c757d; /* Inactive color */
+        background-color: #6c757d; /* Gray for inactive */
         color: white;
+        border: none;
     }
 	
 	.logo {
@@ -510,8 +513,8 @@
 
             </div>
             <div class="header-controls">
-                <button id="mapViewBtn" class="btn btn-primary btn-sm active">Map</button>
-                <button id="gridViewBtn" class="btn btn-secondary btn-sm">Grid</button>
+                <button id="mapViewBtn" class="btn active-view">Map</button>
+    <button id="gridViewBtn" class="btn inactive-view">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
             </div>
@@ -813,30 +816,33 @@
 
     // View toggle functionality
     const mapViewBtn = document.getElementById('mapViewBtn');
-    const gridViewBtn = document.getElementById('gridViewBtn');
-    const mapView = document.getElementById('mapView');
-    const gridView = document.getElementById('gridView');
+const gridViewBtn = document.getElementById('gridViewBtn');
+const mapView = document.getElementById('mapView');
+const gridView = document.getElementById('gridView');
 
     mapViewBtn.addEventListener('click', function() {
         console.log('Map view clicked');
         mapView.style.display = 'block';
-        gridView.style.display = 'none';
+    gridView.style.display = 'none';
         mapViewBtn.classList.add('active-view');
-        mapViewBtn.classList.remove('inactive-view');
-        gridViewBtn.classList.remove('active-view');
-        gridViewBtn.classList.add('inactive-view');
+    mapViewBtn.classList.remove('inactive-view');
+    gridViewBtn.classList.add('inactive-view');
+    gridViewBtn.classList.remove('active-view');
         map.invalidateSize();
         filterEvents(); // Apply filter when switching to map view
     });
 
     gridViewBtn.addEventListener('click', function() {
         console.log('Grid view clicked');
-        mapView.style.display = 'none';
-        gridView.style.display = 'grid';
-        gridViewBtn.classList.add('active-view');
-        gridViewBtn.classList.remove('inactive-view');
-        mapViewBtn.classList.remove('active-view');
-        mapViewBtn.classList.add('inactive-view');
+        // Show grid view
+    gridView.style.display = 'grid';
+    mapView.style.display = 'none';
+
+    // Update button styles
+    gridViewBtn.classList.add('active-view');
+    gridViewBtn.classList.remove('inactive-view');
+    mapViewBtn.classList.add('inactive-view');
+    mapViewBtn.classList.remove('active-view');
         filterEvents(); // Apply filter when switching to grid view
     });
 
