@@ -17,6 +17,13 @@
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+        .event-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
         .back-link {
             margin-bottom: 20px;
             display: inline-block;
@@ -44,6 +51,14 @@
     <a href="{% url 'event_list' %}" class="back-link btn btn-secondary">&larr; Back to Event List</a>
 
     <div class="event-card">
+        <!-- Event Image -->
+        {% if object.image_url %}
+            <img src="{{ object.image_url }}" alt="{{ object.title }}" class="event-image">
+        {% else %}
+            <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png" alt="Image not available" class="event-image">
+        {% endif %}
+
+        <!-- Event Title -->
         <h1 class="mb-3">{{ object.title }}</h1>
         <p><strong>Start Date:</strong> {{ object.start_date|date:"F j, Y" }}</p>
         <p><strong>End Date:</strong> {{ object.end_date|date:"F j, Y" }}</p>
