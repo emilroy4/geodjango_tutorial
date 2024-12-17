@@ -660,21 +660,24 @@
 
     // Function to update grid view
     function updateGridView(events) {
-        const gridView = document.getElementById('gridView');
-        gridView.innerHTML = '';
+    const gridView = document.getElementById('gridView');
+    gridView.innerHTML = '';
 
-        events.forEach(event => {
-            const isFavorite = favorites.includes(event.id.toString());
-            const isPast = event.start_date < new Date();
-            const card = document.createElement('div');
-            card.className = 'event-card';
-            
-            if (isPast) {
-                card.classList.add('past-event');
-            }
+    events.forEach(event => {
+        const isFavorite = favorites.includes(event.id.toString());
+        const isPast = event.start_date < new Date();
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        
+        if (isPast) {
+            card.classList.add('past-event');
+        }
 
-            card.innerHTML = `
-                <img src="/static/images/event-placeholder.jpg" class="event-image" alt="${event.title}">
+        // Use event image if available, otherwise use the S3 placeholder image
+        const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
+
+        card.innerHTML = `
+            <img src="${imageUrl}" class="event-image" alt="${event.title}">
                 <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
                       onclick="toggleFavorite(${event.id})" 
                       title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
