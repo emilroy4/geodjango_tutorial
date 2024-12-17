@@ -655,12 +655,27 @@
             }).addTo(map);
 
             marker.bindPopup(`
-    <div style="text-align: center;">
-        <img src="${event.imageUrl}" alt="${event.title}" style="width: 100%; max-width: 200px; height: auto; border-radius: 8px; margin-bottom: 8px;">
-        <strong>${event.title}</strong><br>
-        Type: ${event.eventType}<br>
-        Date: ${event.start_date.toLocaleDateString()}<br>
-        <a href="${event.detailUrl}" target="_blank" style="color: #007bff; text-decoration: none;">View Details</a>
+    <div style="text-align: center; font-family: Arial, sans-serif; max-width: 250px;">
+        <img src="${event.imageUrl}" alt="${event.title}" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <h4 style="margin: 0; font-size: 1.1rem; color: #333; font-weight: bold;">${event.title}</h4>
+        <p style="margin: 5px 0; color: #666; font-size: 0.9rem;">
+            <strong>Type:</strong> ${event.eventType}<br>
+            <strong>Date:</strong> ${event.start_date.toLocaleDateString()}
+        </p>
+        <a href="${event.detailUrl}" target="_blank" style="
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        " onmouseover="this.style.backgroundColor='#0056b3'" 
+           onmouseout="this.style.backgroundColor='#007bff'">
+            View Details
+        </a>
     </div>
 `);
 
