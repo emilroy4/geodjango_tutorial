@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ object.title }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         /* General Styles */
         body {
@@ -12,8 +13,29 @@
             color: #333;
             transition: background-color 0.5s, color 0.5s;
         }
-        .container {
-            margin-top: 20px;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .logo {
+            height: 50px;
+        }
+        .dark-mode-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .dark-mode-btn:hover {
+            background: #555;
+            transform: scale(1.1);
         }
         /* Split Layout */
         .split-container {
@@ -44,32 +66,7 @@
             height: 100%;
             min-height: 300px;
         }
-        /* Circular Dark Mode Button */
-        .dark-mode-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: #333;
-            color: #fff;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.3s;
-        }
-        .dark-mode-btn:hover {
-            background: #555;
-            transform: scale(1.1);
-        }
-        /* Logo Placement */
-        .logo {
-            display: block;
-            height: 60px;
-            margin: 0 auto 20px;
-        }
-        /* Event Details Styling */
+        /* Event Details */
         .event-details {
             text-align: center;
             padding: 20px;
@@ -77,6 +74,22 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        /* Social Media Icons */
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .social-icons a {
+            margin: 0 10px;
+            color: #555;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        .social-icons a:hover {
+            color: #007bff;
+        }
+        /* Dark Mode */
         .dark-mode {
             background-color: #121212;
             color: #f1f1f1;
@@ -87,22 +100,25 @@
             background-color: #1e1e1e;
             color: #f1f1f1;
         }
+        .dark-mode .social-icons a {
+            color: #aaa;
+        }
+        .dark-mode .social-icons a:hover {
+            color: #00bfff;
+        }
     </style>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
-<body class="container">
-    <!-- Dark Mode Button -->
-    <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
-
-    <!-- Logo -->
-    <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Website Logo" class="logo">
-
-    <!-- Back Button -->
-    <a href="{% url 'event_list' %}" class="btn btn-secondary mb-3">&larr; Back to Event List</a>
+<body class="container mt-4">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="{% url 'event_list' %}" class="btn btn-secondary">&larr; Back to Event List</a>
+        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
+        <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
+    </div>
 
     <!-- Split Container -->
     <div class="split-container">
-        <!-- Image Section -->
+        <!-- Event Image -->
         <div class="split-left">
             {% if object.image_url %}
                 <img src="{{ object.image_url }}" alt="{{ object.title }}">
@@ -111,7 +127,7 @@
             {% endif %}
         </div>
 
-        <!-- Map Section -->
+        <!-- Map -->
         <div id="map" class="split-right"></div>
     </div>
 
@@ -127,6 +143,13 @@
             <strong>Location:</strong> {{ object.latitude }}, {{ object.longitude }}
             <a href="https://www.google.com/maps/dir/?api=1&destination={{ object.latitude }},{{ object.longitude }}" target="_blank" class="btn btn-primary btn-sm ml-2">Navigate to</a>
         </p>
+
+        <!-- Social Media Share -->
+        <div class="social-icons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" title="Share on Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/intent/tweet?text={{ object.title }}&url={{ request.build_absolute_uri }}" target="_blank" title="Share on Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ object.title }}" target="_blank" title="Share on LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
     </div>
 
     <!-- Leaflet.js Map -->
