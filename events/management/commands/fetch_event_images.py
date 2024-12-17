@@ -1,14 +1,14 @@
 from django.core.management.base import BaseCommand
 from events.models import Event
-from events.templates.events.importimages import fetch_image_from_unsplash
+from events.importimages import fetch_image_from_pexels
 
 class Command(BaseCommand):
-    help = 'Fetch images for events from Unsplash'
+    help = 'Fetch images for events from Pexels'
 
     def handle(self, *args, **kwargs):
         events = Event.objects.filter(image_url__isnull=True)  # Only fetch for events without images
         for event in events:
-            image_url = fetch_image_from_unsplash(event.title)
+            image_url = fetch_image_from_pexels(event.title)
             if image_url:
                 event.image_url = image_url
                 event.save()
