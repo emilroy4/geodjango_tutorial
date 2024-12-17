@@ -146,9 +146,11 @@
         <p><strong>Price:</strong> {{ object.price|default:"Free to visit" }}</p>
 
         <!-- Search on Google Button -->
-        <a href="https://www.google.com/search?q={{ object.title|urlencode }}" target="_blank" class="google-search-btn">
-            Search "{{ object.title }}" on Google
-        </a>
+        <a href="https://www.google.com/search?q={{ object.title|add:' '|add:object.location|urlencode }}" 
+        target="_blank" class="google-search-btn">
+         Search "{{ object.title }} {{ object.location }}" on Google
+     </a>
+     
 
         <!-- Social Media Share -->
         <div class="social-icons">
