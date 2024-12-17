@@ -655,6 +655,8 @@
             }).addTo(map);
 
             marker.bindPopup(`
+                
+                "imageUrl": "{{ event.image_url|default:'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png' }}",
                 <strong>${event.title}</strong><br>
                 Type: ${event.eventType}<br>
                 Date: ${event.start_date.toLocaleDateString()}<br>
