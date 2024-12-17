@@ -21,6 +21,7 @@ class Event(models.Model):
     price = models.TextField(max_length=100, blank=True, null=True)  # Can stay as CharField
     start_time = models.TextField(max_length=100, blank=True, null=True)  # Can stay as CharField
     end_time = models.TextField(max_length=100, blank=True, null=True)  # Can stay as CharField
+    image_url = models.URLField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.title
