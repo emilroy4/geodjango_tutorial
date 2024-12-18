@@ -3,9 +3,11 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
+from django.http import HttpResponse
 from .models import Event
 import calendar
 
+# Event views
 class EventListView(ListView):
     model = Event
     template_name = 'event_list.html'  # Template for event listing
@@ -14,23 +16,20 @@ class EventListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add filter data to context
         context['event_types'] = Event.objects.values_list('event_type', flat=True).distinct()
         context['months'] = [(i, calendar.month_name[i]) for i in range(1, 13)]
         years = Event.objects.values_list('start_date__year', flat=True).distinct().order_by('-start_date__year')
         context['years'] = years
         return context
 
-class EventDetailView(DetailView):
-    model = Event
-    template_name = 'events/event_detail.html'
+# Default home page view
+def home(request):
+    return render(request, 'home.html')  # Simple homepage for `/`
 
+# Custom login view
 def custom_login(request):
-    """
-    Custom Login View
-    """
     if request.user.is_authenticated:
-        return redirect("event_list")
+        return redirect("event_list")  # Redirect authenticated users to events
 
     if request.method == "POST":
         username = request.POST.get("username")
@@ -45,11 +44,8 @@ def custom_login(request):
 
     return render(request, "events/auth_form.html", {"form_type": "login"})
 
-
+# Register view
 def register(request):
-    """
-    Custom Register View
-    """
     if request.user.is_authenticated:
         return redirect("event_list")
 
@@ -70,10 +66,7 @@ def register(request):
 
     return render(request, "events/auth_form.html", {"form_type": "register"})
 
-
+# Custom logout view
 def custom_logout(request):
-    """
-    Custom Logout View
-    """
     logout(request)
     return redirect("login")
