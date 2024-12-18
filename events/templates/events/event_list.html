@@ -579,6 +579,7 @@
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
             </div>
 
+            <!-- Add Logout Button Outside Header Controls -->
             <div class="logout-container">
                 {% if user.is_authenticated %}
                 <a href="{% url 'logout' %}" class="btn btn-warning btn-sm"
@@ -627,6 +628,7 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
 
         // Event data from Django
@@ -965,8 +967,9 @@
         };
         mapTypeControl.addTo(map);
 
-        document.addEventListener('DOMContentLoaded', function () {
+        
             // Initialize markers and grid
+            console.log('JavaScript initialized');
             addMarkers(eventData);
             updateGridView(eventData);
 
