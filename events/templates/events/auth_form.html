@@ -3,155 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if form_type == "login" %}Login{% else %}Register{% endif %} - Around Éire Events</title>
+    <title>{% if form_type == "login" %}Login{% else %}Register{% endif %}</title>
     <style>
-        /* General Body Styling */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background: linear-gradient(135deg, #4facfe, #00f2fe, #f8f9fa);
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #f5faff, #f0f4f8);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
+            margin: 0;
         }
 
-        /* Form Container */
         .form-container {
-            background: #ffffff;
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
             max-width: 400px;
-            text-align: center;
-            padding: 30px;
-            animation: slide-in 0.5s ease;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        @keyframes slide-in {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
-        /* Logo */
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 80px;
-            height: auto;
-        }
-
-        /* Header */
         h1 {
             font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 20px;
             color: #333;
+            text-align: center;
         }
 
-        /* Input Styling */
+        .subtext {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
         input {
-            display: block;
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 1rem;
-            transition: box-shadow 0.3s ease, border 0.3s ease;
+            transition: border-color 0.3s ease;
         }
 
         input:focus {
             border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
             outline: none;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
         }
 
-        /* Button Styling */
         button {
-            display: block;
             width: 100%;
             padding: 12px;
-            font-size: 1rem;
-            background: linear-gradient(to right, #007bff, #0056b3);
-            color: white;
+            background: #007bff;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
             cursor: pointer;
-            font-weight: bold;
             transition: background 0.3s ease, transform 0.2s ease;
         }
 
-        button:hover {
-            background: linear-gradient(to right, #0056b3, #003f8a);
-            transform: scale(1.02);
+        button:active {
+            transform: scale(0.97);
         }
 
-        /* Switch Link */
+        button:hover {
+            background: #0056b3;
+        }
+
+        .messages {
+            color: red;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
         .link {
-            margin-top: 15px;
+            text-align: center;
+            margin-top: 10px;
             font-size: 0.9rem;
         }
 
         .link a {
+            text-decoration: none;
             color: #007bff;
             font-weight: bold;
-            text-decoration: none;
-            transition: color 0.3s ease;
         }
 
-        .link a:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-
-        /* Toast Notification */
-        .toast {
-            display: none;
+        #toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #28a745;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 9999;
-            animation: slide-in 0.5s ease;
+            display: none;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+
+        @keyframes fadeout {
+            from { bottom: 20px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <!-- Toast -->
-    <div id="toast" class="toast">Login Successful!</div>
-
-    <!-- Main Container -->
     <div class="form-container">
-        <!-- Logo -->
-        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Around Éire Logo" class="logo">
-
-        <!-- Title -->
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
-
-        <!-- Form -->
-        <form method="post" action="" onsubmit="showLoadingAnimation()">
+        <p class="subtext">Explore and discover amazing events around Ireland</p>
+        <form method="post" action="" onsubmit="showLoading()">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" required>
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <input type="text" name="username" placeholder="Username" aria-label="Username" required>
             <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
             {% if form_type == "register" %}
                 <input type="password" name="password2" placeholder="Confirm Password" required>
             {% endif %}
-            <button type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
+            <button type="submit" id="submitButton">Login</button>
         </form>
-
-        <!-- Switch Links -->
         <div class="link">
             {% if form_type == "login" %}
                 <p>Don't have an account? <a href="{% url 'register' %}">Register Here</a></p>
@@ -161,29 +151,29 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast">Login Successful! Welcome back.</div>
+
     <!-- JavaScript -->
     <script>
-        // Show Toast on Successful Login
-        {% if messages %}
-            {% for message in messages %}
-                {% if "success" in message.tags %}
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const toast = document.getElementById("toast");
-                        toast.style.display = "block";
-                        setTimeout(() => {
-                            toast.style.display = "none";
-                        }, 3000);
-                    });
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-        // Show Loading Animation
-        function showLoadingAnimation() {
-            const button = document.querySelector('button[type="submit"]');
-            button.innerHTML = "Loading...";
+        function showLoading() {
+            const button = document.getElementById('submitButton');
             button.disabled = true;
+            button.innerText = 'Loading...';
         }
+
+        // Show toast after login success
+        {% if messages %}
+            document.addEventListener("DOMContentLoaded", function() {
+                const toast = document.getElementById("toast");
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        toast.style.display = "block";
+                        setTimeout(() => { toast.style.display = "none"; }, 3000);
+                    {% endif %}
+                {% endfor %}
+            });
+        {% endif %}
     </script>
 </body>
 </html>
