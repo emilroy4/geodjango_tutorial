@@ -31,13 +31,6 @@
             color: #333;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #666;
-        }
-
         input {
             width: 100%;
             padding: 10px;
@@ -63,6 +56,13 @@
             background: #0056b3;
         }
 
+        .messages {
+            color: red;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
         .link {
             text-align: center;
             margin-top: 10px;
@@ -73,23 +73,23 @@
             color: #007bff;
             font-size: 0.9rem;
         }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
-        <form method="post" action="{% if form_type == "login" %}{% url 'login' %}{% else %}{% url 'register' %}{% endif %}">
+        <form method="post" action="">
             {% csrf_token %}
-            {% if form.errors %}
-                <div style="color: red; font-size: 0.9rem; margin-bottom: 10px;">
-                    {{ form.errors }}
-                </div>
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
+            {% if form_type == "register" %}
+                <input type="password" name="password2" placeholder="Confirm Password" required>
             {% endif %}
-            {{ form.as_p }}
             <button type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
         </form>
         <div class="link">

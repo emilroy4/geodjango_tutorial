@@ -22,12 +22,12 @@ from events import views as event_views  # Import views for registration
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("world.urls")),
-    path("events/", include("events.urls")),
-    
+    path("", include("world.urls")),  # Root page
+    path("events/", include("events.urls")),  # Events page
 
     # Authentication URLs
     path("login/", event_views.custom_login, name="login"),
     path("register/", event_views.register, name="register"),
     path("logout/", event_views.custom_logout, name="logout"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
