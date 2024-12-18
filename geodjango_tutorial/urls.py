@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
-from events import views as event_views  # Import views for authentication
+from events import views as event_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", event_views.home, name="home"),  # Root URL redirects appropriately
+    path("", event_views.home, name="home"),  # Root URL
     path("events/", include("events.urls")),
 
     # Authentication URLs
@@ -30,5 +30,6 @@ urlpatterns = [
     path("register/", event_views.register, name="register"),
     path("logout/", event_views.custom_logout, name="logout"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 
 
