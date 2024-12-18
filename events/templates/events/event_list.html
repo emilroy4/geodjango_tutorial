@@ -540,9 +540,18 @@
             </div>
             <div class="header-controls">
                 <button id="mapViewBtn" class="btn active-view">Map</button>
-    <button id="gridViewBtn" class="btn inactive-view">Grid</button>
+                <button id="gridViewBtn" class="btn inactive-view">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
+                
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to log out?')">
+                        Logout
+                    </button>
+                </form>
+                
+
             </div>
         </div>
 

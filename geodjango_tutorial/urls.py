@@ -25,11 +25,13 @@ urlpatterns = [
     path("", event_views.home, name="home"),  # Root URL redirects to login/register
     path("events/", event_views.EventListView.as_view(), name="event_list"),
     path("event/<int:pk>/", event_views.EventDetailView.as_view(), name="event_detail"),
+    path("logout/", views.logout_user, name="logout"),
 
     # Authentication URLs
     path("login/", event_views.custom_login, name="login"),
     path("register/", event_views.register, name="register"),
     path("logout/", event_views.custom_logout, name="logout"),
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

@@ -75,9 +75,9 @@ def register(request):
 
     return render(request, "events/auth_form.html", {"form_type": "register"})
 
-def custom_logout(request):
+def logout_user(request):
     """
-    Custom Logout View
+    Logs out the user and redirects to the login page.
     """
     logout(request)
-    return redirect("login")  # Redirect to login page
+    return redirect("login")  # Redirect to login page after logout
