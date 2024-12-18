@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("world.urls")),
     path("events/", include("events.urls")),
+    
 
     # Authentication URLs
     path("login/", event_views.custom_login, name="login"),
