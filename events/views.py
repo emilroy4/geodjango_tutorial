@@ -48,7 +48,6 @@ def custom_login(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, f"Welcome back, {username}!")
             return redirect("event_list")  # Redirect to events page
         else:
             messages.error(request, "Invalid username or password")
@@ -72,7 +71,6 @@ def register(request):
             user = User.objects.create_user(username=username, password=password1)
             user.save()
             login(request, user)  # Log in the user after successful registration
-            messages.success(request, f"Account created successfully! Welcome, {username}!")
             return redirect("event_list")  # Redirect to events page
 
     return render(request, "events/auth_form.html", {"form_type": "register"})

@@ -526,39 +526,10 @@
     margin-right: 10px;
 }
 
-#toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            display: none;
-            font-size: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            animation: fadein 0.5s, fadeout 0.5s 3s;
-            z-index: 9999;
-        }
-
-        @keyframes fadein {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeout {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
-        }
 
     </style>
 </head>
 <body>
-
-
-    <div id="toast">{{ messages }}</div>
-
-
     <div class="app-container">
         <!-- Update the header section -->
         <div class="header">
@@ -972,11 +943,6 @@ const gridView = document.getElementById('gridView');
     mapTypeControl.addTo(map);
 
     document.addEventListener('DOMContentLoaded', function() {
-        const toast = document.getElementById("toast");
-            if (toast.textContent.trim() !== "") {
-                toast.style.display = "block";
-                setTimeout(() => toast.style.display = "none", 4000);  // Auto-hide after 4 seconds
-            }
         // Initialize markers and grid
         addMarkers(eventData);
         updateGridView(eventData);
