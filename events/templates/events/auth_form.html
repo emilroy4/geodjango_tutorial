@@ -7,40 +7,46 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom right, #f5faff, #f0f4f8);
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(to bottom right, #e3f2fd, #bbdefb, #90caf9);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
         }
 
         .form-container {
-            background: white;
+            background: #ffffff;
             border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             width: 90%;
             max-width: 400px;
-            padding: 20px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .form-container:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
         }
 
         h1 {
+            margin: 10px 0 20px;
+            color: #007bff;
             font-size: 1.8rem;
-            color: #333;
-            text-align: center;
-        }
-
-        .subtext {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 15px;
         }
 
         input {
@@ -56,46 +62,54 @@
         input:focus {
             border-color: #007bff;
             outline: none;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        input.error {
+            border-color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            display: none;
+            text-align: left;
+            margin-bottom: 10px;
         }
 
         button {
             width: 100%;
             padding: 12px;
             background: #007bff;
+            color: white;
             border: none;
             border-radius: 5px;
-            color: white;
             font-size: 1rem;
             cursor: pointer;
             transition: background 0.3s ease, transform 0.2s ease;
         }
 
         button:active {
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
 
         button:hover {
             background: #0056b3;
         }
 
-        .messages {
-            color: red;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
         .link {
-            text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 0.9rem;
         }
 
         .link a {
-            text-decoration: none;
             color: #007bff;
             font-weight: bold;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
         }
 
         #toast {
@@ -114,34 +128,33 @@
         }
 
         @keyframes fadein {
-            from { bottom: 0; opacity: 0; }
-            to { bottom: 20px; opacity: 1; }
+            from { opacity: 0; bottom: 0; }
+            to { opacity: 1; bottom: 20px; }
         }
 
         @keyframes fadeout {
-            from { bottom: 20px; opacity: 1; }
-            to { bottom: 0; opacity: 0; }
+            from { opacity: 1; bottom: 20px; }
+            to { opacity: 0; bottom: 0; }
         }
     </style>
 </head>
 <body>
     <div class="form-container">
+        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
-        <p class="subtext">Explore and discover amazing events around Ireland</p>
-        <form method="post" action="" onsubmit="showLoading()">
+
+        <form method="post" action="" onsubmit="return validateForm()">
             {% csrf_token %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-            <input type="text" name="username" placeholder="Username" aria-label="Username" required>
-            <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
+            <div id="toast">Login Successful! Welcome back 🎉</div>
+            <div class="error-message" id="error-msg">Passwords do not match!</div>
+            <input type="text" name="username" id="username" placeholder="Username" required>
+            <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" id="password1" placeholder="Password" required>
             {% if form_type == "register" %}
-                <input type="password" name="password2" placeholder="Confirm Password" required>
+                <input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
             {% endif %}
             <button type="submit" id="submitButton">Login</button>
         </form>
+
         <div class="link">
             {% if form_type == "login" %}
                 <p>Don't have an account? <a href="{% url 'register' %}">Register Here</a></p>
@@ -151,29 +164,27 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast">Login Successful! Welcome back.</div>
-
-    <!-- JavaScript -->
     <script>
-        function showLoading() {
-            const button = document.getElementById('submitButton');
-            button.disabled = true;
-            button.innerText = 'Loading...';
+        function validateForm() {
+            const password1 = document.getElementById("password1");
+            const password2 = document.getElementById("password2");
+            const errorMsg = document.getElementById("error-msg");
+
+            if (password2 && password1.value !== password2.value) {
+                password2.classList.add("error");
+                errorMsg.style.display = "block";
+                return false;
+            }
+            document.getElementById('submitButton').innerText = "Loading...";
+            showToast();
+            return true;
         }
 
-        // Show toast after login success
-        {% if messages %}
-            document.addEventListener("DOMContentLoaded", function() {
-                const toast = document.getElementById("toast");
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                        toast.style.display = "block";
-                        setTimeout(() => { toast.style.display = "none"; }, 3000);
-                    {% endif %}
-                {% endfor %}
-            });
-        {% endif %}
+        function showToast() {
+            const toast = document.getElementById("toast");
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3000);
+        }
     </script>
 </body>
 </html>
