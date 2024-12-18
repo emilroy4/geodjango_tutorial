@@ -3,14 +3,21 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from django.http import HttpResponse
 from .models import Event
 import calendar
 
-# Event views
+
+# Redirect root URL to login/register page or events if logged in
+def home(request):
+    if request.user.is_authenticated:
+        return redirect("event_list")  # Redirect to events page if logged in
+    return render(request, "events/auth_form.html", {"form_type": "login"})  # Show login form
+
+
+# Event list view
 class EventListView(ListView):
     model = Event
-    template_name = 'event_list.html'  # Template for event listing
+    template_name = 'event_list.html'
     context_object_name = 'events'
     ordering = ['start_date']
 
@@ -22,27 +29,31 @@ class EventListView(ListView):
         context['years'] = years
         return context
 
-# Default home page view
-def home(request):
-    return render(request, 'home.html')  # Simple homepage for `/`
 
-# Custom login view
+# Event detail view
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'events/event_detail.html'
+
+
+# Login view
 def custom_login(request):
     if request.user.is_authenticated:
-        return redirect("event_list")  # Redirect authenticated users to events
+        return redirect("event_list")
 
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+        if user:
             login(request, user)
             return redirect("event_list")
         else:
             messages.error(request, "Invalid username or password")
 
     return render(request, "events/auth_form.html", {"form_type": "login"})
+
 
 # Register view
 def register(request):
@@ -66,7 +77,8 @@ def register(request):
 
     return render(request, "events/auth_form.html", {"form_type": "register"})
 
-# Custom logout view
+
+# Logout view
 def custom_logout(request):
     logout(request)
     return redirect("login")

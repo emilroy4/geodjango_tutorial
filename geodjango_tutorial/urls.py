@@ -22,8 +22,8 @@ from events import views as event_views  # Import views for authentication
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", event_views.home, name="home"),  # Root homepage
-    path("events/", include("events.urls")),  # Events page
+    path("", event_views.home, name="home"),  # Root URL redirects appropriately
+    path("events/", include("events.urls")),
 
     # Authentication URLs
     path("login/", event_views.custom_login, name="login"),
