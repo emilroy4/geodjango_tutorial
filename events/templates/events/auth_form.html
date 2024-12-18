@@ -7,68 +7,79 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #6db3f2, #1e69de);
+            color: #333;
             margin: 0;
-            height: 100vh;
-            background: linear-gradient(to bottom right, #e3f2fd, #bbdefb, #90caf9);
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
 
         .form-container {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             width: 90%;
             max-width: 400px;
-            padding: 25px;
-            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .logo {
-            width: 80px;
-            margin-bottom: 15px;
+        .form-container:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
         }
 
         h1 {
-            margin-bottom: 15px;
-            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .messages {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        .messages p {
-            background-color: #ffecec;
-            color: #d8000c;
-            border: 1px solid #ffbaba;
-            padding: 8px;
-            border-radius: 5px;
-            font-size: 0.9rem;
+        img.logo {
+            display: block;
+            margin: 0 auto 10px;
+            height: 80px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
             border-radius: 5px;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #007bff;
-            color: white;
+            padding: 10px;
             border: none;
             border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background: #0056b3;
+            background-color: #0056b3;
+        }
+
+        button.loading {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .messages {
+            margin-bottom: 10px;
+            text-align: center;
+            color: #d8000c;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -76,30 +87,27 @@
     <div class="form-container">
         <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
-
-        <!-- Display error/success messages -->
+        
+        <!-- Display error or success messages -->
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
-                    <p style="background-color: {% if message.tags == 'error' %}#ffecec{% else %}#e6ffed{% endif %}; 
-                              color: {% if message.tags == 'error' %}#d8000c{% else %}#008000{% endif %};">
-                        {{ message }}
-                    </p>
+                    <p>{{ message }}</p>
                 {% endfor %}
             </div>
         {% endif %}
-
-        <form method="post">
+        
+        <!-- Form -->
+        <form method="post" action="" onsubmit="showLoading()">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
             {% if form_type == "register" %}
                 <input type="password" name="password2" placeholder="Confirm Password" required>
             {% endif %}
-            <button type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
+            <button id="submitBtn" type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
         </form>
-
-        <div class="link">
+        <div style="text-align: center; margin-top: 10px;">
             {% if form_type == "login" %}
                 <p>Don't have an account? <a href="{% url 'register' %}">Register Here</a></p>
             {% else %}
@@ -107,5 +115,13 @@
             {% endif %}
         </div>
     </div>
+
+    <script>
+        function showLoading() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.textContent = 'Please wait...';
+        }
+    </script>
 </body>
 </html>

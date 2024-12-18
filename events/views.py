@@ -39,7 +39,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
 def custom_login(request):
     """
-    Custom Login View with detailed error feedback and success message.
+    Custom Login View with error feedback only.
     """
     if request.method == "POST":
         username = request.POST.get("username")
@@ -48,7 +48,6 @@ def custom_login(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "Login successful! Welcome back.")
             return redirect("event_list")  # Redirect to events page
         else:
             messages.error(request, "Invalid username or password. Please try again.")
@@ -78,15 +77,14 @@ def register(request):
             user = User.objects.create_user(username=username, password=password1)
             user.save()
             login(request, user)  # Log in the user after successful registration
-            messages.success(request, "Registration successful! Welcome to Around Éire Events.")
             return redirect("event_list")  # Redirect to events page
 
     return render(request, "events/auth_form.html", {"form_type": "register"})
 
 def logout_user(request):
     """
-    Logs out the user and redirects to the login page with confirmation message.
+    Logs out the user and redirects to the login page.
     """
     logout(request)
-    messages.success(request, "You have been successfully logged out.")
+    messages.success(request, "You have been logged out successfully.")
     return redirect("login")
