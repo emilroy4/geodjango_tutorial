@@ -538,22 +538,27 @@
 </div>
 
             </div>
-            <div class="header-controls">
+            <div class="header-controls d-flex align-items-center">
                 <button id="mapViewBtn" class="btn active-view">Map</button>
                 <button id="gridViewBtn" class="btn inactive-view">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
-
-
-                <span class="welcome-text mr-3">Welcome, {{ user.username }}!</span>
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            
+                <!-- Styled username -->
+                <span class="welcome-text ml-3 px-3 py-1 font-weight-bold text-white rounded" 
+                      style="background-color: #007bff; font-size: 0.95rem;">
+                    👋 Welcome, {{ user.username }}!
+                </span>
+            
+                <!-- Logout button -->
+                <form method="post" action="{% url 'logout' %}" style="display: inline;" class="ml-3">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to log out?')">
                         Logout
                     </button>
                 </form>
-
             </div>
+            
 
             
             
