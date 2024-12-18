@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if form_type == "login" %}Login{% else %}Register{% endif %} - Around Éire Events</title>
     <style>
-        /* General Styles */
+        /* General Body Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background: linear-gradient(to bottom right, #87CEFA, #F8F9FA, #FFDEAD);
+            background: linear-gradient(135deg, #4facfe, #00f2fe, #f8f9fa);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,90 +20,96 @@
         /* Form Container */
         .form-container {
             background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 90%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
             max-width: 400px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-container:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Banner */
-        .banner {
             text-align: center;
-            background: linear-gradient(to right, #007bff, #0056b3);
-            padding: 15px 0;
-            color: white;
-            font-size: 1.3rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border-radius: 10px 10px 0 0;
+            padding: 30px;
+            animation: slide-in 0.5s ease;
         }
 
-        /* Logo Styling */
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo */
         .logo {
             display: block;
-            margin: 20px auto;
+            margin: 0 auto 20px;
             width: 80px;
             height: auto;
         }
 
-        /* Input Fields */
+        /* Header */
+        h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Input Styling */
         input {
             display: block;
-            width: calc(100% - 20px);
-            margin: 10px auto;
+            width: 100%;
             padding: 12px;
-            font-size: 1rem;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: border-color 0.3s ease;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: box-shadow 0.3s ease, border 0.3s ease;
         }
 
         input:focus {
             border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
             outline: none;
         }
 
-        /* Button */
+        /* Button Styling */
         button {
-            width: calc(100% - 20px);
             display: block;
-            margin: 20px auto;
+            width: 100%;
             padding: 12px;
             font-size: 1rem;
-            background: #007bff;
+            background: linear-gradient(to right, #007bff, #0056b3);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background: #0056b3;
+            background: linear-gradient(to right, #0056b3, #003f8a);
+            transform: scale(1.02);
         }
 
-        /* Loading Spinner */
-        .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+        /* Switch Link */
+        .link {
+            margin-top: 15px;
+            font-size: 0.9rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .link a {
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .link a:hover {
+            color: #0056b3;
+            text-decoration: underline;
         }
 
         /* Toast Notification */
@@ -116,58 +122,27 @@
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 9999;
-        }
-
-        .messages {
-            color: red;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .link {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .link a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
+            animation: slide-in 0.5s ease;
         }
     </style>
 </head>
 <body>
+    <!-- Toast -->
+    <div id="toast" class="toast">Login Successful!</div>
+
     <!-- Main Container -->
     <div class="form-container">
-        <!-- Banner Section -->
-        <div class="banner">
-            Around Éire Events
-        </div>
+        <!-- Logo -->
+        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Around Éire Logo" class="logo">
 
-        <!-- Logo Section -->
-        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
-
-        <!-- Header -->
+        <!-- Title -->
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
-
-        <!-- Loading Spinner -->
-        <div id="spinner" class="spinner"></div>
 
         <!-- Form -->
         <form method="post" action="" onsubmit="showLoadingAnimation()">
             {% csrf_token %}
-            <div class="messages">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
             {% if form_type == "register" %}
@@ -176,7 +151,7 @@
             <button type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
         </form>
 
-        <!-- Switch Link -->
+        <!-- Switch Links -->
         <div class="link">
             {% if form_type == "login" %}
                 <p>Don't have an account? <a href="{% url 'register' %}">Register Here</a></p>
@@ -186,22 +161,9 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">Login Successful!</div>
-
     <!-- JavaScript -->
     <script>
-        function showLoadingAnimation() {
-            const button = document.querySelector('button[type="submit"]');
-            const spinner = document.getElementById("spinner");
-
-            // Show spinner and disable the button
-            spinner.style.display = "block";
-            button.textContent = "Loading...";
-            button.disabled = true;
-        }
-
-        // Simulate toast notification for successful login
+        // Show Toast on Successful Login
         {% if messages %}
             {% for message in messages %}
                 {% if "success" in message.tags %}
@@ -215,6 +177,13 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
+
+        // Show Loading Animation
+        function showLoadingAnimation() {
+            const button = document.querySelector('button[type="submit"]');
+            button.innerHTML = "Loading...";
+            button.disabled = true;
+        }
     </script>
 </body>
 </html>
