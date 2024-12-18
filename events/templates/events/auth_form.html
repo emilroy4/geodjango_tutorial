@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .auth-header img {
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .auth-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo">
+            <h2>{{ title }}</h2>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">{{ title }}</button>
+        </form>
+        <div class="auth-footer">
+            {% if title == "Login" %}
+                <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            {% else %}
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

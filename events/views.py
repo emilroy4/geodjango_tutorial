@@ -1,8 +1,16 @@
 from django.views.generic import ListView, DetailView
 from .models import Event
 import calendar
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
+
+# Event List View
 class EventListView(ListView):
     model = Event
     template_name = 'event_list.html'  # Updated to match your template path
@@ -27,7 +35,41 @@ class EventListView(ListView):
 
         return context
 
+# Event Detail View
 class EventDetailView(DetailView):
     model = Event
     template_name = 'events/event_detail.html'  # Update to your template path
 
+
+# Login View
+def custom_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect("event_list")  # Redirect to event list
+        messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, "auth_form.html", {"form": form, "title": "Login"})
+
+# Register View
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Registration successful. Please log in.")
+            return redirect("login")
+    else:
+        form = UserCreationForm()
+    return render(request, "auth_form.html", {"form": form, "title": "Register"})
+
+# Logout View
+def custom_logout(request):
+    logout(request)
+    return redirect("login")
