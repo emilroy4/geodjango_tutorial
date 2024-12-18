@@ -58,6 +58,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "geodjango_tutorial.urls"
 
+LOGOUT_REDIRECT_URL = 'login'  # Redirect users to the login page after logging out
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

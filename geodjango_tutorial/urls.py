@@ -19,15 +19,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
 from events import views as event_views
+from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", event_views.home, name="home"),  # Root URL redirects to login/register
     path("events/", event_views.EventListView.as_view(), name="event_list"),
     path("event/<int:pk>/", event_views.EventDetailView.as_view(), name="event_detail"),
-
+    
     # Authentication URLs
     path("login/", event_views.custom_login, name="login"),
     path("register/", event_views.register, name="register"),
-    path("logout/", event_views.custom_logout, name="logout"),
+    path("logout/", LogoutView.as_view(), name="logout"),  # Use built-in LogoutView
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
