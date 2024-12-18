@@ -49,7 +49,7 @@ def custom_login(request):
         else:
             messages.error(request, "Invalid username or password")
 
-    return render(request, "auth_form.html", {"form_type": "login"})
+    return render(request, "events/auth_form.html", {"form_type": "login"})
 
 
 def register(request):
@@ -73,7 +73,8 @@ def register(request):
                 login(request, user)  # Log in the user after successful registration
                 return redirect("event_list")  # Redirect to event list
 
-    return render(request, "auth_form.html", {"form_type": "register"})
+    return render(request, "events/auth_form.html", {"form_type": "register"})
+
 
 
 def custom_logout(request):
