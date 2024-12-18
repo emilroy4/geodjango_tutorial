@@ -17,7 +17,23 @@
             overflow: hidden;
         }
 
-        /* Event banner */
+        /* Form Container */
+        .form-container {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Banner */
         .banner {
             text-align: center;
             background: linear-gradient(to right, #007bff, #0056b3);
@@ -29,22 +45,12 @@
             border-radius: 10px 10px 0 0;
         }
 
-        /* Container */
-        .form-container {
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
-            overflow: hidden;
-        }
-
-        /* Header */
-        h1 {
-            font-size: 1.8rem;
-            margin: 15px 0;
-            text-align: center;
-            color: #333;
+        /* Logo Styling */
+        .logo {
+            display: block;
+            margin: 20px auto;
+            width: 80px;
+            height: auto;
         }
 
         /* Input Fields */
@@ -83,15 +89,44 @@
             background: #0056b3;
         }
 
-        /* Messages */
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+        }
+
         .messages {
-            color: #d9534f;
+            color: red;
             font-size: 0.9rem;
             text-align: center;
             margin-bottom: 10px;
         }
 
-        /* Link */
         .link {
             text-align: center;
             margin-bottom: 15px;
@@ -105,25 +140,6 @@
 
         .link a:hover {
             text-decoration: underline;
-        }
-
-        /* Logo Styling */
-        .logo {
-            display: block;
-            margin: 20px auto;
-            width: 80px; /* Adjust size as needed */
-            height: auto;
-        }
-
-        /* Mobile-friendly adjustments */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .banner {
-                font-size: 1.1rem;
-            }
         }
     </style>
 </head>
@@ -141,8 +157,11 @@
         <!-- Header -->
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
 
+        <!-- Loading Spinner -->
+        <div id="spinner" class="spinner"></div>
+
         <!-- Form -->
-        <form method="post" action="">
+        <form method="post" action="" onsubmit="showLoadingAnimation()">
             {% csrf_token %}
             <div class="messages">
                 {% for message in messages %}
@@ -166,5 +185,36 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Login Successful!</div>
+
+    <!-- JavaScript -->
+    <script>
+        function showLoadingAnimation() {
+            const button = document.querySelector('button[type="submit"]');
+            const spinner = document.getElementById("spinner");
+
+            // Show spinner and disable the button
+            spinner.style.display = "block";
+            button.textContent = "Loading...";
+            button.disabled = true;
+        }
+
+        // Simulate toast notification for successful login
+        {% if messages %}
+            {% for message in messages %}
+                {% if "success" in message.tags %}
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const toast = document.getElementById("toast");
+                        toast.style.display = "block";
+                        setTimeout(() => {
+                            toast.style.display = "none";
+                        }, 3000);
+                    });
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
 </body>
 </html>
