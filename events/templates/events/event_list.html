@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -98,7 +99,7 @@
             position: relative;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -106,16 +107,19 @@
         .event-card:hover,
         .event-card:active {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
             background-color: #ffffff;
         }
 
         .event-image {
             width: 100%;
-            height: 180px; /* Maintain consistent height */
-            object-fit: cover; /* Change to 'contain' if you want no cropping */
+            height: 180px;
+            /* Maintain consistent height */
+            object-fit: cover;
+            /* Change to 'contain' if you want no cropping */
             display: block;
-            background-color: #f5f5f5; /* Optional: adds a background in case of empty areas */
+            background-color: #f5f5f5;
+            /* Optional: adds a background in case of empty areas */
         }
 
         .event-content {
@@ -128,7 +132,8 @@
             color: #333;
         }
 
-        .event-date, .event-type {
+        .event-date,
+        .event-type {
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 5px;
@@ -142,7 +147,8 @@
 
         body.dark-mode .app-container {
             background: rgba(30, 30, 30, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.1); /* Subtle light border for contrast */
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            /* Subtle light border for contrast */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
 
@@ -176,7 +182,7 @@
         body.dark-mode .event-card:hover,
         body.dark-mode .event-card:active {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             background-color: #333333;
         }
 
@@ -213,13 +219,13 @@
         @media (hover: none) {
             .event-card:active {
                 transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
                 background-color: #ffffff;
             }
 
             body.dark-mode .event-card:active {
                 transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
                 background-color: #333333;
             }
         }
@@ -238,12 +244,12 @@
             justify-content: center;
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .favorite-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
         }
 
         .favorite-btn.active {
@@ -252,9 +258,17 @@
         }
 
         @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Dark mode adjustments */
@@ -274,7 +288,7 @@
             background: white;
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             max-width: 150px;
             font-size: 11px;
@@ -319,14 +333,14 @@
             background: white;
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .map-type-control {
             background: white;
             padding: 5px;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
             margin-left: 10px;
             margin: 8px;
@@ -401,7 +415,7 @@
         @media (min-width: 1024px) {
             body {
                 padding: 20px;
-		padding-top: 2px;
+                padding-top: 2px;
             }
 
             .app-container {
@@ -429,113 +443,126 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+            0% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
         }
 
         .past-event {
-        position: relative;
-        opacity: 0.6;
-    }
+            position: relative;
+            opacity: 0.6;
+        }
 
-    .past-event::after {
-        content: "Event Over";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: yellow;
-        color: black;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 1rem;
-        font-weight: bold;
-        pointer-events: none;
-        border: 2px solid black;
-    }
+        .past-event::after {
+            content: "Event Over";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: yellow;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            pointer-events: none;
+            border: 2px solid black;
+        }
 
 
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-        margin-left: 10px;
-    }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+        }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: 0.4s;
-        border-radius: 34px;
-    }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
 
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
 
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
 
-    .btn {
-        transition: background-color 0.3s, color 0.3s;
-    }
+        .btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Button active/inactive styles */
-    .active-view {
-        background-color: #007bff; /* Blue for active */
-        color: white;
-        border: none;
-    }
+        /* Button active/inactive styles */
+        .active-view {
+            background-color: #007bff;
+            /* Blue for active */
+            color: white;
+            border: none;
+        }
 
-    .inactive-view {
-        background-color: #6c757d; /* Gray for inactive */
-        color: white;
-        border: none;
-    }
-	
-	.logo {
-    height: 60px; /* Adjust height as needed */
-    width: auto; /* Maintain aspect ratio */
-    margin-right: 10px;
-}
+        .inactive-view {
+            background-color: #6c757d;
+            /* Gray for inactive */
+            color: white;
+            border: none;
+        }
 
+        .logo {
+            height: 60px;
+            /* Adjust height as needed */
+            width: auto;
+            /* Maintain aspect ratio */
+            margin-right: 10px;
+        }
     </style>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Update the header section -->
         <div class="header">
             <div class="header-title">
                 <div class="header-title">
-    <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
-</div>
+                    <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo"
+                        class="logo">
+                </div>
 
             </div>
             <div class="header-controls">
@@ -544,15 +571,18 @@
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
 
+
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm"
+                        onclick="return confirm('Are you sure you want to log out?')">
+                        Logout
+                    </button>
+                </form>
             </div>
 
-            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to log out?')">
-                    Logout
-                </button>
-            </form>
-            
+
+
         </div>
 
         <!-- Update the filters section -->
@@ -560,19 +590,19 @@
             <select class="filter-dropdown" id="eventTypeFilter">
                 <option value="all">All Event Types</option>
                 {% for type in event_types %}
-                    <option value="{{ type }}">{{ type }}</option>
+                <option value="{{ type }}">{{ type }}</option>
                 {% endfor %}
             </select>
             <select class="filter-dropdown" id="monthFilter">
                 <option value="all">All Months</option>
                 {% for month in months %}
-                    <option value="{{ month.0 }}">{{ month.1 }}</option>
+                <option value="{{ month.0 }}">{{ month.1 }}</option>
                 {% endfor %}
             </select>
             <select class="filter-dropdown" id="yearFilter">
                 <option value="all">All Years</option>
                 {% for year in years %}
-                    <option value="{{ year }}">{{ year }}</option>
+                <option value="{{ year }}">{{ year }}</option>
                 {% endfor %}
             </select>
             <input type="text" class="form-control search-bar" id="searchInput" placeholder="Search events...">
@@ -596,59 +626,59 @@
     <script>
 
 
-    // Event data from Django
-    const eventData = [
-        {% for event in events %}
-            {
-                "id": {{ event.id }},
-                "title": "{{ event.title|escapejs }}",
-                "latitude": {{ event.latitude }},
-                "longitude": {{ event.longitude }},
-                "eventType": "{{ event.event_type|escapejs }}",
+        // Event data from Django
+        const eventData = [
+            {% for event in events %}
+        {
+            "id": { { event.id } },
+            "title": "{{ event.title|escapejs }}",
+                "latitude": { { event.latitude } },
+            "longitude": { { event.longitude } },
+            "eventType": "{{ event.event_type|escapejs }}",
                 "start_date": new Date("{{ event.start_date|date:'Y-m-d' }}"),
-                "imageUrl": "{{ event.image_url|default:'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png' }}",
-                "detailUrl": "{% url 'event_detail' event.pk %}"
-            }{% if not forloop.last %},{% endif %}
+                    "imageUrl": "{{ event.image_url|default:'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png' }}",
+                        "detailUrl": "{% url 'event_detail' event.pk %}"
+        } {% if not forloop.last %}, {% endif %}
         {% endfor %}
     ];
 
-    console.log('Event Data:', eventData);
+        console.log('Event Data:', eventData);
 
-    // Initialize map first
-    const map = L.map('map').setView([53.349805, -6.26031], 7);
+        // Initialize map first
+        const map = L.map('map').setView([53.349805, -6.26031], 7);
 
-    // Base layers
-    const standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
+        // Base layers
+        const standardLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-    const satelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 19,
-        attribution: '© Google'
-    });
+        const satelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 19,
+            attribution: '© Google'
+        });
 
-    // Event type to color mapping
-    const eventTypeColors = {
-        'Comedy': 'blue',
-        'Festival': 'green',
-        'Sports': 'red',
-        'Music': 'purple',
-        'Halloween': 'orange',
-        'Workshop': 'yellow',
-        'Social': 'pink',
-        'Dance': 'teal',
-        'Film': 'brown',
-        'Theatre': 'grey',
-        'Broadcast': 'black',
-        'Exhibition': 'cyan'
-    };
+        // Event type to color mapping
+        const eventTypeColors = {
+            'Comedy': 'blue',
+            'Festival': 'green',
+            'Sports': 'red',
+            'Music': 'purple',
+            'Halloween': 'orange',
+            'Workshop': 'yellow',
+            'Social': 'pink',
+            'Dance': 'teal',
+            'Film': 'brown',
+            'Theatre': 'grey',
+            'Broadcast': 'black',
+            'Exhibition': 'cyan'
+        };
 
-    // Add the legend to the map
-    const legend = L.control({ position: 'topright' });
-    legend.onAdd = function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML = `
+        // Add the legend to the map
+        const legend = L.control({ position: 'topright' });
+        legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `
             <h6>Event Types</h6>
             <div class="legend-items">
                 ${Object.entries(eventTypeColors).map(([type, color]) => `
@@ -659,32 +689,32 @@
                 `).join('')}
             </div>
         `;
-        return div;
-    };
-    legend.addTo(map);
+            return div;
+        };
+        legend.addTo(map);
 
-    // Function to add markers to the map
-    function addMarkers(events) {
-        // Clear existing markers
-        map.eachLayer((layer) => {
-            if (layer instanceof L.CircleMarker) {
-                map.removeLayer(layer);
-            }
-        });
+        // Function to add markers to the map
+        function addMarkers(events) {
+            // Clear existing markers
+            map.eachLayer((layer) => {
+                if (layer instanceof L.CircleMarker) {
+                    map.removeLayer(layer);
+                }
+            });
 
-        // Add new markers
-        events.forEach(event => {
-            const color = eventTypeColors[event.eventType] || 'gray';
-            const isFavorite = favorites.includes(event.id.toString());
-            const marker = L.circleMarker([event.latitude, event.longitude], {
-                color: color,
-                fillColor: color,
-                fillOpacity: 0.7,
-                radius: 8,
-                className: isFavorite ? 'favorite-marker' : ''
-            }).addTo(map);
+            // Add new markers
+            events.forEach(event => {
+                const color = eventTypeColors[event.eventType] || 'gray';
+                const isFavorite = favorites.includes(event.id.toString());
+                const marker = L.circleMarker([event.latitude, event.longitude], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.7,
+                    radius: 8,
+                    className: isFavorite ? 'favorite-marker' : ''
+                }).addTo(map);
 
-            marker.bindPopup(`
+                marker.bindPopup(`
     <div style="text-align: center; font-family: Arial, sans-serif; max-width: 250px;">
         <img src="${event.imageUrl}" alt="${event.title}" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
         <h4 style="margin: 0; font-size: 1.1rem; color: #333; font-weight: bold;">${event.title}</h4>
@@ -709,28 +739,28 @@
     </div>
 `);
 
-        });
-    }
-
-    // Function to update grid view
-    function updateGridView(events) {
-    const gridView = document.getElementById('gridView');
-    gridView.innerHTML = '';
-
-    events.forEach(event => {
-        const isFavorite = favorites.includes(event.id.toString());
-        const isPast = event.start_date < new Date();
-        const card = document.createElement('div');
-        card.className = 'event-card';
-        
-        if (isPast) {
-            card.classList.add('past-event');
+            });
         }
 
-        // Use event image if available, otherwise use the S3 placeholder image
-        //const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
+        // Function to update grid view
+        function updateGridView(events) {
+            const gridView = document.getElementById('gridView');
+            gridView.innerHTML = '';
 
-        card.innerHTML = `
+            events.forEach(event => {
+                const isFavorite = favorites.includes(event.id.toString());
+                const isPast = event.start_date < new Date();
+                const card = document.createElement('div');
+                card.className = 'event-card';
+
+                if (isPast) {
+                    card.classList.add('past-event');
+                }
+
+                // Use event image if available, otherwise use the S3 placeholder image
+                //const imageUrl = event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png';
+
+                card.innerHTML = `
                  <img src="${event.imageUrl || 'https://ireland-events-static.s3.eu-west-1.amazonaws.com/Image_not_available.png'}" class="event-image" alt="${event.title}">
                  
                 <span class="favorite-btn ${isFavorite ? 'active' : ''}" 
@@ -747,60 +777,60 @@
                     </div>
                 </div>
             `;
-            gridView.appendChild(card);
+                gridView.appendChild(card);
+            });
+        }
+
+        // Favorites functionality
+        let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
+        const favoritesToggle = document.getElementById('favoritesToggle');
+        let showingFavorites = false;
+
+        function toggleFavorite(eventId) {
+            console.log('Toggling favorite for event:', eventId);
+            const idStr = eventId.toString();
+            const index = favorites.indexOf(idStr);
+
+            const favoriteBtn = document.querySelector(`[onclick="toggleFavorite(${eventId})"]`);
+
+            if (index === -1) {
+                favorites.push(idStr);
+                if (favoriteBtn) {
+                    favoriteBtn.innerHTML = '❤️';
+                    favoriteBtn.title = 'Remove from favorites';
+                }
+            } else {
+                favorites.splice(index, 1);
+                if (favoriteBtn) {
+                    favoriteBtn.innerHTML = '🤍';
+                    favoriteBtn.title = 'Add to favorites';
+                }
+            }
+
+            localStorage.setItem('favoriteEvents', JSON.stringify(favorites));
+
+            if (favoriteBtn) {
+                favoriteBtn.classList.toggle('active');
+            }
+
+            if (showingFavorites) {
+                const favoriteEvents = eventData.filter(event =>
+                    favorites.includes(event.id.toString())
+                );
+                addMarkers(favoriteEvents);
+                updateGridView(favoriteEvents);
+            }
+        }
+
+        favoritesToggle.addEventListener('click', function () {
+            console.log('Favorites toggle clicked');
+            showingFavorites = !showingFavorites;
+            favoritesToggle.classList.toggle('active');
+            filterEvents();
         });
-    }
 
-    // Favorites functionality
-    let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
-    const favoritesToggle = document.getElementById('favoritesToggle');
-    let showingFavorites = false;
-
-    function toggleFavorite(eventId) {
-        console.log('Toggling favorite for event:', eventId);
-        const idStr = eventId.toString();
-        const index = favorites.indexOf(idStr);
-        
-        const favoriteBtn = document.querySelector(`[onclick="toggleFavorite(${eventId})"]`);
-        
-        if (index === -1) {
-            favorites.push(idStr);
-            if (favoriteBtn) {
-                favoriteBtn.innerHTML = '❤️';
-                favoriteBtn.title = 'Remove from favorites';
-            }
-        } else {
-            favorites.splice(index, 1);
-            if (favoriteBtn) {
-                favoriteBtn.innerHTML = '🤍';
-                favoriteBtn.title = 'Add to favorites';
-            }
-        }
-        
-        localStorage.setItem('favoriteEvents', JSON.stringify(favorites));
-        
-        if (favoriteBtn) {
-            favoriteBtn.classList.toggle('active');
-        }
-        
         if (showingFavorites) {
-            const favoriteEvents = eventData.filter(event => 
-                favorites.includes(event.id.toString())
-            );
-            addMarkers(favoriteEvents);
-            updateGridView(favoriteEvents);
-        }
-    }
-
-    favoritesToggle.addEventListener('click', function() {
-        console.log('Favorites toggle clicked');
-        showingFavorites = !showingFavorites;
-        favoritesToggle.classList.toggle('active');
-        filterEvents();
-    });
-        
-        if (showingFavorites) {
-            const favoriteEvents = eventData.filter(event => 
+            const favoriteEvents = eventData.filter(event =>
                 favorites.includes(event.id.toString())
             );
             addMarkers(favoriteEvents);
@@ -809,138 +839,139 @@
             addMarkers(eventData);
             updateGridView(eventData);
         }
-    
 
-    // Filter functionality
-    const upcomingToggle = document.getElementById('upcomingToggle');
-    let showUpcomingOnly = false;
 
-    upcomingToggle.addEventListener('change', function() {
-        showUpcomingOnly = upcomingToggle.checked;
-        filterEvents();
-    });
+        // Filter functionality
+        const upcomingToggle = document.getElementById('upcomingToggle');
+        let showUpcomingOnly = false;
 
-    function filterEvents() {
-        console.log('Filtering events...');
-        const typeFilter = document.getElementById('eventTypeFilter').value;
-        const monthFilter = document.getElementById('monthFilter').value;
-        const yearFilter = document.getElementById('yearFilter').value;
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-        let filteredEvents = eventData.filter(event => {
-            const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
-            const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
-            const matchesYear = yearFilter === 'all' || event.start_date.getFullYear() === parseInt(yearFilter);
-            const matchesSearch = event.title.toLowerCase().includes(searchTerm) || 
-                                  event.eventType.toLowerCase().includes(searchTerm);
-            const isUpcoming = !showUpcomingOnly || event.start_date >= new Date();
-
-            return matchesType && matchesMonth && matchesYear && matchesSearch && isUpcoming;
+        upcomingToggle.addEventListener('change', function () {
+            showUpcomingOnly = upcomingToggle.checked;
+            filterEvents();
         });
 
-        if (showingFavorites) {
-            filteredEvents = filteredEvents.filter(event => favorites.includes(event.id.toString()));
+        function filterEvents() {
+            console.log('Filtering events...');
+            const typeFilter = document.getElementById('eventTypeFilter').value;
+            const monthFilter = document.getElementById('monthFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredEvents = eventData.filter(event => {
+                const matchesType = typeFilter === 'all' || event.eventType === typeFilter;
+                const matchesMonth = monthFilter === 'all' || event.start_date.getMonth() + 1 === parseInt(monthFilter);
+                const matchesYear = yearFilter === 'all' || event.start_date.getFullYear() === parseInt(yearFilter);
+                const matchesSearch = event.title.toLowerCase().includes(searchTerm) ||
+                    event.eventType.toLowerCase().includes(searchTerm);
+                const isUpcoming = !showUpcomingOnly || event.start_date >= new Date();
+
+                return matchesType && matchesMonth && matchesYear && matchesSearch && isUpcoming;
+            });
+
+            if (showingFavorites) {
+                filteredEvents = filteredEvents.filter(event => favorites.includes(event.id.toString()));
+            }
+
+            addMarkers(filteredEvents);
+            updateGridView(filteredEvents);
         }
 
-        addMarkers(filteredEvents);
-        updateGridView(filteredEvents);
-    }
+        // Add filter event listeners
+        document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
+        document.getElementById('monthFilter').addEventListener('change', filterEvents);
+        document.getElementById('yearFilter').addEventListener('change', filterEvents);
+        document.getElementById('searchInput').addEventListener('input', filterEvents);
 
-    // Add filter event listeners
-    document.getElementById('eventTypeFilter').addEventListener('change', filterEvents);
-    document.getElementById('monthFilter').addEventListener('change', filterEvents);
-    document.getElementById('yearFilter').addEventListener('change', filterEvents);
-    document.getElementById('searchInput').addEventListener('input', filterEvents);
+        // Initialize markers and grid
+        addMarkers(eventData);
+        updateGridView(eventData);
 
-    // Initialize markers and grid
-    addMarkers(eventData);
-    updateGridView(eventData);
+        // Add debug logging
+        console.log('Initial event data:', eventData);
 
-    // Add debug logging
-    console.log('Initial event data:', eventData);
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterEvents);
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', filterEvents);
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.textContent = '🌙'; // Set initial moon icon
 
-    // Dark mode toggle
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.textContent = '🌙'; // Set initial moon icon
-    
-    themeToggle.addEventListener('click', function() {
-        console.log('Dark mode toggle clicked');
-        document.body.classList.toggle('dark-mode');
-        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
+        themeToggle.addEventListener('click', function () {
+            console.log('Dark mode toggle clicked');
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
 
-    // View toggle functionality
-    const mapViewBtn = document.getElementById('mapViewBtn');
-const gridViewBtn = document.getElementById('gridViewBtn');
-const mapView = document.getElementById('mapView');
-const gridView = document.getElementById('gridView');
+        // View toggle functionality
+        const mapViewBtn = document.getElementById('mapViewBtn');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const mapView = document.getElementById('mapView');
+        const gridView = document.getElementById('gridView');
 
-    mapViewBtn.addEventListener('click', function() {
-        console.log('Map view clicked');
-        mapView.style.display = 'block';
-    gridView.style.display = 'none';
-        mapViewBtn.classList.add('active-view');
-    mapViewBtn.classList.remove('inactive-view');
-    gridViewBtn.classList.add('inactive-view');
-    gridViewBtn.classList.remove('active-view');
-        map.invalidateSize();
-        filterEvents(); // Apply filter when switching to map view
-    });
+        mapViewBtn.addEventListener('click', function () {
+            console.log('Map view clicked');
+            mapView.style.display = 'block';
+            gridView.style.display = 'none';
+            mapViewBtn.classList.add('active-view');
+            mapViewBtn.classList.remove('inactive-view');
+            gridViewBtn.classList.add('inactive-view');
+            gridViewBtn.classList.remove('active-view');
+            map.invalidateSize();
+            filterEvents(); // Apply filter when switching to map view
+        });
 
-    gridViewBtn.addEventListener('click', function() {
-        console.log('Grid view clicked');
-        // Show grid view
-    gridView.style.display = 'grid';
-    mapView.style.display = 'none';
+        gridViewBtn.addEventListener('click', function () {
+            console.log('Grid view clicked');
+            // Show grid view
+            gridView.style.display = 'grid';
+            mapView.style.display = 'none';
 
-    // Update button styles
-    gridViewBtn.classList.add('active-view');
-    gridViewBtn.classList.remove('inactive-view');
-    mapViewBtn.classList.add('inactive-view');
-    mapViewBtn.classList.remove('active-view');
-        filterEvents(); // Apply filter when switching to grid view
-    });
+            // Update button styles
+            gridViewBtn.classList.add('active-view');
+            gridViewBtn.classList.remove('inactive-view');
+            mapViewBtn.classList.add('inactive-view');
+            mapViewBtn.classList.remove('active-view');
+            filterEvents(); // Apply filter when switching to grid view
+        });
 
-    // Add map type control to bottom left
-    const mapTypeControl = L.control({ position: 'bottomleft' });
-    mapTypeControl.onAdd = function() {
-        const div = L.DomUtil.create('div', 'map-type-control');
-        div.innerHTML = `
+        // Add map type control to bottom left
+        const mapTypeControl = L.control({ position: 'bottomleft' });
+        mapTypeControl.onAdd = function () {
+            const div = L.DomUtil.create('div', 'map-type-control');
+            div.innerHTML = `
             <select class="form-control" id="mapTypeSelect">
                 <option value="standard">Standard Map</option>
                 <option value="satellite">Satellite View</option>
             </select>
         `;
-        
-        // Add event listener after the control is created
-        const select = div.querySelector('select');
-        select.addEventListener('change', function(e) {
-            if (e.target.value === 'satellite') {
-                map.removeLayer(standardLayer);
-                satelliteLayer.addTo(map);
-            } else {
-                map.removeLayer(satelliteLayer);
-                standardLayer.addTo(map);
-            }
+
+            // Add event listener after the control is created
+            const select = div.querySelector('select');
+            select.addEventListener('change', function (e) {
+                if (e.target.value === 'satellite') {
+                    map.removeLayer(standardLayer);
+                    satelliteLayer.addTo(map);
+                } else {
+                    map.removeLayer(satelliteLayer);
+                    standardLayer.addTo(map);
+                }
+            });
+
+            return div;
+        };
+        mapTypeControl.addTo(map);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize markers and grid
+            addMarkers(eventData);
+            updateGridView(eventData);
+
+            // Add all event listeners here
+            // ... (all the event listeners from above)
         });
-        
-        return div;
-    };
-    mapTypeControl.addTo(map);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize markers and grid
-        addMarkers(eventData);
-        updateGridView(eventData);
-
-        // Add all event listeners here
-        // ... (all the event listeners from above)
-    });
-
-</script>
+    </script>
 </body>
+
 </html>
