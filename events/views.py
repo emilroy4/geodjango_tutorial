@@ -6,6 +6,10 @@ from django.views.generic import ListView, DetailView
 from .models import Event
 import calendar
 
+import os
+print("Looking for template at:", os.path.abspath('templates/auth_form.html'))
+
+
 class EventListView(ListView):
     model = Event
     template_name = 'event_list.html'  # Template for event listing
