@@ -107,12 +107,12 @@
             text-decoration: underline;
         }
 
-        /* Icon Styling */
-        .icon {
-            text-align: center;
+        /* Logo Styling */
+        .logo {
+            display: block;
             margin: 20px auto;
-            font-size: 3rem;
-            color: #007bff;
+            width: 80px; /* Adjust size as needed */
+            height: auto;
         }
 
         /* Mobile-friendly adjustments */
@@ -132,13 +132,11 @@
     <div class="form-container">
         <!-- Banner Section -->
         <div class="banner">
-            🌍 Around Éire Events
+            Around Éire Events
         </div>
 
-        <!-- Icon Section -->
-        <div class="icon">
-            🎉
-        </div>
+        <!-- Logo Section -->
+        <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
 
         <!-- Header -->
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
