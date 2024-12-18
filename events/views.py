@@ -1,19 +1,14 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from .models import Event
 import calendar
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from datetime import datetime
-
-
-# Event List View
 class EventListView(ListView):
     model = Event
-    template_name = 'event_list.html'  # Updated to match your template path
+    template_name = 'event_list.html'  # Template for event listing
     context_object_name = 'events'
     ordering = ['start_date']
 
@@ -28,48 +23,58 @@ class EventListView(ListView):
         years = Event.objects.values_list('start_date__year', flat=True).distinct().order_by('-start_date__year')
         context['years'] = years
 
-        # Debug print
-        print(f"Events count: {self.get_queryset().count()}")
-        print(f"Event types: {list(context['event_types'])}")
-        print(f"Years: {list(years)}")
-
         return context
 
-# Event Detail View
 class EventDetailView(DetailView):
     model = Event
-    template_name = 'events/event_detail.html'  # Update to your template path
+    template_name = 'events/event_detail.html'  # Template for event detail view
 
 
-# Login View
 def custom_login(request):
+    """
+    Custom Login View
+    """
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect("event_list")  # Redirect to event list
-        messages.error(request, "Invalid username or password.")
-    else:
-        form = AuthenticationForm()
-    return render(request, "auth_form.html", {"form": form, "title": "Login"})
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
 
-# Register View
+        if user is not None:
+            login(request, user)
+            return redirect("event_list")  # Redirect to event list on success
+        else:
+            messages.error(request, "Invalid username or password")
+
+    return render(request, "auth_form.html", {"form_type": "login"})
+
+
 def register(request):
+    """
+    Custom Register View
+    """
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Registration successful. Please log in.")
-            return redirect("login")
-    else:
-        form = UserCreationForm()
-    return render(request, "auth_form.html", {"form": form, "title": "Register"})
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
 
-# Logout View
+        # Check if passwords match
+        if password1 != password2:
+            messages.error(request, "Passwords do not match")
+        else:
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "Username already exists")
+            else:
+                user = User.objects.create_user(username=username, password=password1)
+                user.save()
+                login(request, user)  # Log in the user after successful registration
+                return redirect("event_list")  # Redirect to event list
+
+    return render(request, "auth_form.html", {"form_type": "register"})
+
+
 def custom_logout(request):
+    """
+    Custom Logout View
+    """
     logout(request)
-    return redirect("login")
+    return redirect("login")  # Redirect to login page after logging out
