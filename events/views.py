@@ -39,7 +39,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
 def custom_login(request):
     """
-    Custom Login View
+    Custom Login View with detailed error feedback and success message.
     """
     if request.method == "POST":
         username = request.POST.get("username")
@@ -48,36 +48,45 @@ def custom_login(request):
 
         if user is not None:
             login(request, user)
+            messages.success(request, "Login successful! Welcome back.")
             return redirect("event_list")  # Redirect to events page
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid username or password. Please try again.")
 
     return render(request, "events/auth_form.html", {"form_type": "login"})
 
 def register(request):
     """
-    Custom Register View
+    Custom Register View with real-time feedback for errors.
     """
     if request.method == "POST":
         username = request.POST.get("username")
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
 
-        if password1 != password2:
-            messages.error(request, "Passwords do not match")
+        # Validate user inputs
+        if not username or not password1 or not password2:
+            messages.error(request, "All fields are required.")
+        elif len(password1) < 6:
+            messages.error(request, "Password must be at least 6 characters long.")
+        elif password1 != password2:
+            messages.error(request, "Passwords do not match.")
         elif User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
+            messages.error(request, "Username already exists. Please choose a different one.")
         else:
+            # Create user
             user = User.objects.create_user(username=username, password=password1)
             user.save()
             login(request, user)  # Log in the user after successful registration
+            messages.success(request, "Registration successful! Welcome to Around Éire Events.")
             return redirect("event_list")  # Redirect to events page
 
     return render(request, "events/auth_form.html", {"form_type": "register"})
 
 def logout_user(request):
     """
-    Logs out the user and redirects to the login page.
+    Logs out the user and redirects to the login page with confirmation message.
     """
     logout(request)
-    return redirect("login")  # Redirect to login page after logout
+    messages.success(request, "You have been successfully logged out.")
+    return redirect("login")

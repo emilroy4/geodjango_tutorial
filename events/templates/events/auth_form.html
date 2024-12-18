@@ -23,59 +23,38 @@
             max-width: 400px;
             padding: 25px;
             text-align: center;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
         }
 
         .logo {
             width: 80px;
             margin-bottom: 15px;
-            animation: bounce 1s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-5px); }
         }
 
         h1 {
-            margin: 10px 0 20px;
+            margin-bottom: 15px;
             color: #007bff;
-            font-size: 1.8rem;
+        }
+
+        .messages {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .messages p {
+            background-color: #ffecec;
+            color: #d8000c;
+            border: 1px solid #ffbaba;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9rem;
         }
 
         input {
             width: 100%;
-            box-sizing: border-box; /* Prevents overflow */
             padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-        }
-
-        input.error {
-            border-color: red;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.9rem;
-            display: none;
-            text-align: left;
-            margin-bottom: 10px;
         }
 
         button {
@@ -85,57 +64,11 @@
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        button:active {
-            transform: scale(0.98);
         }
 
         button:hover {
             background: #0056b3;
-        }
-
-        .link {
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .link a {
-            color: #007bff;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: none;
-            font-size: 0.9rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-
-        @keyframes fadein {
-            from { opacity: 0; bottom: 0; }
-            to { opacity: 1; bottom: 20px; }
-        }
-
-        @keyframes fadeout {
-            from { opacity: 1; bottom: 20px; }
-            to { opacity: 0; bottom: 0; }
         }
     </style>
 </head>
@@ -144,16 +77,26 @@
         <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
 
-        <form method="post" action="" onsubmit="return validateForm()">
+        <!-- Display error/success messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p style="background-color: {% if message.tags == 'error' %}#ffecec{% else %}#e6ffed{% endif %}; 
+                              color: {% if message.tags == 'error' %}#d8000c{% else %}#008000{% endif %};">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
             {% csrf_token %}
-            <div id="toast">Login Successful! Welcome back 🎉</div>
-            <div class="error-message" id="error-msg">Passwords do not match!</div>
-            <input type="text" name="username" id="username" placeholder="Username" required>
-            <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" id="password1" placeholder="Password" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password{% if form_type == 'register' %}1{% endif %}" placeholder="Password" required>
             {% if form_type == "register" %}
-                <input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
+                <input type="password" name="password2" placeholder="Confirm Password" required>
             {% endif %}
-            <button type="submit" id="submitButton">Login</button>
+            <button type="submit">{% if form_type == "login" %}Login{% else %}Register{% endif %}</button>
         </form>
 
         <div class="link">
@@ -164,28 +107,5 @@
             {% endif %}
         </div>
     </div>
-
-    <script>
-        function validateForm() {
-            const password1 = document.getElementById("password1");
-            const password2 = document.getElementById("password2");
-            const errorMsg = document.getElementById("error-msg");
-
-            if (password2 && password1.value !== password2.value) {
-                password2.classList.add("error");
-                errorMsg.style.display = "block";
-                return false;
-            }
-            document.getElementById('submitButton').innerText = "Loading...";
-            showToast();
-            return true;
-        }
-
-        function showToast() {
-            const toast = document.getElementById("toast");
-            toast.style.display = "block";
-            setTimeout(() => { toast.style.display = "none"; }, 3000);
-        }
-    </script>
 </body>
 </html>
