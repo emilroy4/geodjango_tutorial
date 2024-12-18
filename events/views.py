@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -14,11 +15,13 @@ def home(request):
         return redirect("event_list")
     return render(request, "events/auth_form.html", {"form_type": "login"})
 
-class EventListView(ListView):
+class EventListView(LoginRequiredMixin, ListView):
     model = Event
     template_name = 'event_list.html'
     context_object_name = 'events'
     ordering = ['start_date']
+    login_url = '/login/'  # Redirect unauthenticated users to login
+    redirect_field_name = 'next'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,9 +31,11 @@ class EventListView(ListView):
         context['years'] = years
         return context
 
-class EventDetailView(DetailView):
+class EventDetailView(LoginRequiredMixin, DetailView):
     model = Event
     template_name = 'events/event_detail.html'
+    login_url = '/login/'  # Redirect unauthenticated users to login
+    redirect_field_name = 'next'
 
 def custom_login(request):
     """
