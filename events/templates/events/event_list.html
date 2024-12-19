@@ -526,6 +526,10 @@
     margin-right: 10px;
 }
 
+.header-controls .btn-success {
+            background-color: #28a745;
+        }
+
 
     </style>
 </head>
@@ -544,7 +548,7 @@
                 <button id="gridViewBtn" class="btn inactive-view">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
-                <button id="nearMeBtn" class="btn btn-primary btn-sm">Events Near Me</button>
+                <button id="nearMeBtn" class="btn btn-success">Events Near Me</button>
             
                 <!-- Styled username -->
                 <span class="welcome-text ml-3 px-3 py-1 font-weight-bold text-white rounded" 
@@ -673,6 +677,9 @@
         return div;
     };
     legend.addTo(map);
+    
+    // Add user location marker
+    let userMarker = null;
 
     // Function to add markers to the map
     function addMarkers(events) {
@@ -785,11 +792,21 @@
             updateGridView(nearbyEvents);
         };
 
-        // Handle "Events Near Me" button
         document.getElementById('nearMeBtn').addEventListener('click', () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     const { latitude, longitude } = position.coords;
+
+                    // Add user location marker
+                    if (userMarker) map.removeLayer(userMarker);
+                    userMarker = L.marker([latitude, longitude], {
+                        icon: L.icon({
+                            iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png', // User icon
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 40]
+                        })
+                    }).addTo(map).bindPopup('You are here!').openPopup();
+
                     filterEventsNearMe(latitude, longitude);
                     map.setView([latitude, longitude], 12); // Zoom to user's location
                 }, () => {
