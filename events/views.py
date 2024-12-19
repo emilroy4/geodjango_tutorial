@@ -6,6 +6,21 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from .models import Event
 import calendar
+import math
+
+def haversine(lat1, lon1, lat2, lon2):
+    """
+    Calculate the great-circle distance between two points 
+    on the Earth's surface specified in decimal degrees.
+    Returns distance in kilometers.
+    """
+    R = 6371  # Radius of Earth in kilometers
+    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
 
 def home(request):
     """
@@ -22,6 +37,29 @@ class EventListView(LoginRequiredMixin, ListView):
     ordering = ['start_date']
     login_url = '/login/'  # Redirect unauthenticated users to login
     redirect_field_name = 'next'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_location = self.request.GET.get('location', None)
+
+        if user_location:
+            try:
+                user_lat, user_lng = map(float, user_location.split(','))
+                # Add distance to each event and filter within 10 km
+                events_with_distance = []
+                for event in queryset:
+                    event_distance = haversine(user_lat, user_lng, event.latitude, event.longitude)
+                    if event_distance <= 10:  # Within 10 km
+                        event.distance = event_distance
+                        events_with_distance.append(event)
+
+                # Sort by distance
+                events_with_distance.sort(key=lambda x: x.distance)
+                return events_with_distance
+            except ValueError:
+                pass  # Ignore invalid coordinates
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

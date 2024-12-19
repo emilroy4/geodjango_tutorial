@@ -544,6 +544,7 @@
                 <button id="gridViewBtn" class="btn inactive-view">Grid</button>
                 <button id="themeToggle" class="btn btn-dark btn-sm">🌙</button>
                 <button id="favoritesToggle" class="btn btn-danger btn-sm">❤</button>
+                <button id="nearMeBtn" class="btn btn-primary btn-sm">Events Near Me</button>
             
                 <!-- Styled username -->
                 <span class="welcome-text ml-3 px-3 py-1 font-weight-bold text-white rounded" 
@@ -761,6 +762,45 @@
         });
     }
 
+    // Filter events near user
+    const filterEventsNearMe = (lat, lng, radius = 10) => {
+            const toRadians = (deg) => deg * (Math.PI / 180);
+            const haversine = (lat1, lon1, lat2, lon2) => {
+                const R = 6371; // Earth's radius in km
+                const dLat = toRadians(lat2 - lat1);
+                const dLon = toRadians(lon2 - lon1);
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                          Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c; // Distance in km
+            };
+
+            const nearbyEvents = eventData.filter(event => {
+                const distance = haversine(lat, lng, event.latitude, event.longitude);
+                return distance <= radius;
+            });
+
+            addMarkers(nearbyEvents);
+            updateGridView(nearbyEvents);
+        };
+
+        // Handle "Events Near Me" button
+        document.getElementById('nearMeBtn').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    filterEventsNearMe(latitude, longitude);
+                    map.setView([latitude, longitude], 12); // Zoom to user's location
+                }, () => {
+                    alert('Unable to retrieve your location. Please enable location services.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+
+
     // Favorites functionality
     let favorites = JSON.parse(localStorage.getItem('favoriteEvents')) || [];
     const favoritesToggle = document.getElementById('favoritesToggle');
@@ -819,6 +859,13 @@
             addMarkers(eventData);
             updateGridView(eventData);
         }
+
+
+
+
+
+
+
     
 
     // Filter functionality
