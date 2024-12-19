@@ -1,7 +1,7 @@
 # CA1: Event App
 
 ## Visit the Website
-[Access the Event App here](https://c21716601awm24.xyz/events/)
+[Access the Event App here](https://c21716601awm24.xyz)
 
 ## Docker hub link
 
