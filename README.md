@@ -13,18 +13,18 @@ The Event App is a dynamic web application designed to showcase events across Ir
 
 ## Functionalities
 
-| **Feature**                 | **Description**                                                                 |
-|-----------------------------|---------------------------------------------------------------------------------|
-| **Interactive Maps**        | Real-time updates with interactive controls for navigating and zooming.         |
-| **Event Navigation**        | Directly open event locations on Google Maps for user convenience.              |
-| **Event Filters**           | Filter events by type, date, and keywords for customised views.                 |
-| **User Favorites**          | Save and filter favorite events for quick access.                               |
-| **Event Details**           | Access detailed event information with images and sharing options.              |
-| **Share Event**             | Share events on popular platforms like Facebook, X (Twitter), and LinkedIn.     |
-| **Satellite Mode**          | Toggle between standard and satellite map views.                                |
-| **Secure Deployment**       | Ensures user data and access are protected with HTTPS.                          |
-| **Responsive Interface**    | Works seamlessly on mobile, tablet, and desktop devices.                        |
-| **Event Management**        | Administrators can add, edit, and remove events via the database.               |
+| 🎯 **Feature**               | ✨ **Description**                                                             |
+|------------------------------|-------------------------------------------------------------------------------|
+| 🗺️ **Interactive Maps**       | Real-time updates with interactive controls for navigating and zooming.       |
+| 📍 **Event Navigation**      | Directly open event locations on Google Maps for user convenience.            |
+| 🔍 **Event Filters**          | Filter events by type, date, and keywords for customised views.               |
+| ❤️ **User Favorites**         | Save and filter favorite events for quick access.                             |
+| 📄 **Event Details**          | Access detailed event information with images and sharing options.            |
+| 🔗 **Share Event**            | Share events on popular platforms like Facebook, X (Twitter), and LinkedIn.   |
+| 🛰️ **Satellite Mode**         | Toggle between standard and satellite map views.                              |
+| 🔒 **Secure Deployment**      | Ensures user data and access are protected with HTTPS.                        |
+| 📱 **Responsive Interface**   | Works seamlessly on mobile, tablet, and desktop devices.                      |
+| 🛠️ **Event Management**       | Administrators can add, edit, and remove events via the database.             |
 
 ## Instructions to Use the Application
 
