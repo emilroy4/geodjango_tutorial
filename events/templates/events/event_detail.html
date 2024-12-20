@@ -111,7 +111,7 @@
         .navigate-btn {
             display: inline-block;
             padding: 8px 12px;
-            background-color: #007bff;
+            background-color: #209f00;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -122,7 +122,7 @@
         }
 
         .navigate-btn:hover {
-            background-color: #0056b3;
+            background-color: #48e200;
         }
     </style>
 </head>
@@ -162,7 +162,7 @@
         <a class="navigate-btn" 
                href="https://www.google.com/maps?q={{ event.latitude }},{{ event.longitude }}" 
                target="_blank">
-                Open in Google Maps
+                Get Directions
             </a>
         <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
         <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
@@ -172,7 +172,7 @@
         <!-- Search on Google Button -->
         <a href="https://www.google.com/search?q={{ object.title|add:' '|add:object.location|urlencode }}" 
         target="_blank" class="google-search-btn">
-         Get Directions
+         Search "{{ object.title }}" on Google
      </a>
      
 
