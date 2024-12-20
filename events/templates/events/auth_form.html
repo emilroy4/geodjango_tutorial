@@ -83,6 +83,9 @@
         }
 
         .dark-mode-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             width: 40px;
             height: 40px;
             border: none;
@@ -92,7 +95,11 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: background 0.3s, transform 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .dark-mode-btn:hover {
             background: #555;
             transform: scale(1.1);
@@ -102,33 +109,29 @@
             background-color: #121212;
             color: #f1f1f1;
         }
-        .dark-mode .grid-item,
-        .dark-mode .event-details {
+        .dark-mode .form-container {
             background-color: #1e1e1e;
             color: #f1f1f1;
         }
-        .dark-mode .social-icons a {
-            color: #aaa;
-        }
-        .dark-mode .social-icons a:hover {
-            color: #00bfff;
+
+        .dark-mode input {
+            background-color: #2e2e2e;
+            color: #f1f1f1;
+            border-color: #555;
         }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .dark-mode button {
+            background-color: #555;
+            color: white;
+        }
+
+        .dark-mode button:hover {
+            background-color: #333;
         }
     </style>
 </head>
 <body>
-
-    <div class="top-bar"></div>
-
-        <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
-    </div>
-
+    <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
 
     <div class="form-container">
         <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
@@ -169,8 +172,8 @@
             btn.textContent = 'Please wait...';
         }
 
-                // Dark Mode Toggle
-                const darkModeToggle = document.getElementById('darkModeToggle');
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
