@@ -160,12 +160,6 @@
         <p><strong>Description:</strong> {{ object.description|default:"No description provided." }}</p>
         <p><strong>Venue:</strong> {{ object.venue_name|default:"Not specified" }}</p>
         <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
-        
-        <a class="navigate-btn" 
-        href="https://www.google.com/maps?q={{ event.latitude }},{{ event.longitude }}" 
-        target="_blank">
-         Get Directions
-     </a>
         <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
         <p><strong>Phone:</strong> {{ object.contact_phone_number|default:"No phone number" }}</p>
         <p><strong>Price:</strong> {{ object.price|default:"Free to visit" }}</p>
@@ -175,6 +169,12 @@
         target="_blank" class="google-search-btn">
          Search "{{ object.title }}" on Google
      </a>
+     
+     <a class="navigate-btn" 
+     href="https://www.google.com/maps?q={{ event.latitude }},{{ event.longitude }}" 
+     target="_blank">
+      Get Directions
+  </a>
      
 
         <!-- Social Media Share -->
