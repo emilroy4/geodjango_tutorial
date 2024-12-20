@@ -172,12 +172,22 @@
             btn.textContent = 'Please wait...';
         }
 
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        darkModeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
+        // Check for saved dark mode preference on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.textContent = '☀️';
+        }
+    });
+
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.addEventListener('click', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('darkMode', isDarkMode); // Save preference
+    });
     </script>
 </body>
 </html>
