@@ -81,9 +81,55 @@
             color: #007bff;
             text-decoration: none;
         }
+
+        .dark-mode-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .dark-mode-btn:hover {
+            background: #555;
+            transform: scale(1.1);
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #f1f1f1;
+        }
+        .dark-mode .grid-item,
+        .dark-mode .event-details {
+            background-color: #1e1e1e;
+            color: #f1f1f1;
+        }
+        .dark-mode .social-icons a {
+            color: #aaa;
+        }
+        .dark-mode .social-icons a:hover {
+            color: #00bfff;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+
+    <div class="top-bar"></div>
+
+        <button id="darkModeToggle" class="dark-mode-btn" title="Toggle Dark Mode">🌙</button>
+    </div>
+
+
     <div class="form-container">
         <img src="https://ireland-events-static.s3.eu-west-1.amazonaws.com/logo.png" alt="Logo" class="logo">
         <h1>{% if form_type == "login" %}Login{% else %}Register{% endif %}</h1>
@@ -122,6 +168,13 @@
             btn.classList.add('loading');
             btn.textContent = 'Please wait...';
         }
+
+                // Dark Mode Toggle
+                const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
     </script>
 </body>
 </html>
