@@ -873,14 +873,22 @@
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', filterEvents);
 
-    // Dark mode toggle
+    // Check for saved dark mode preference on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.textContent = '☀️';
+        }
+    });
+
+    // Toggle dark mode and save preference
     const themeToggle = document.getElementById('themeToggle');
-    themeToggle.textContent = '🌙'; // Set initial moon icon
-    
-    themeToggle.addEventListener('click', function() {
-        console.log('Dark mode toggle clicked');
-        document.body.classList.toggle('dark-mode');
-        themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    themeToggle.addEventListener('click', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+        localStorage.setItem('darkMode', isDarkMode);
     });
 
     // View toggle functionality
