@@ -1,4 +1,5 @@
 # CA2: Event App (Around Eire)
+![logo](https://github.com/user-attachments/assets/57b62c8c-d05b-4c50-a58d-9b08875cdbe7)
 
 ## Visit the Website
 [Access the Event App here](https://c21716601awm24.xyz)
@@ -73,20 +74,25 @@ The Event App is a dynamic web application designed to showcase events across Ir
 ## Application Screenshots
 
 ### Event App Overview
-![Event App](https://github.com/user-attachments/assets/d33bc345-cbc3-4e57-9fa8-55b00bf66ff5)
+<img width="1439" alt="image" src="https://github.com/user-attachments/assets/28f09f1f-f781-4eeb-b6d5-c24fd9b395cc" />
+
 
 ### Satellite Mode
-![Satellite Mode](https://github.com/user-attachments/assets/fedb43ac-4b71-41c6-b873-cb14ee609cb1)
+<img width="1223" alt="image" src="https://github.com/user-attachments/assets/f0a95f38-2121-4194-84f7-f5582783c60e" />
+
 
 ### Event Details Popup
-![Event Details Popup](https://github.com/user-attachments/assets/a3ad602b-d4c8-40e5-9fd4-a201b88523da)
-When the user presses “More Info,” they are presented with additional information about the event, including:
+<img width="388" alt="image" src="https://github.com/user-attachments/assets/d2996f5a-8ae9-4864-8757-ed558b71b7b9" />
 
-- **Navigate to**: Opens Google Maps with the event location.
+When the user presses “View Details,” they are presented with additional information about the event, including:
+
+- **Online Search**: Opens Google with the event details.
+- **Directions**: Opens Google Maps with the event location.
 - **Share**: Options to share the event on Facebook, X (Twitter), and LinkedIn.
 - **Back to Event List**: Return to browse other events.
 
-![Back to Event List](https://github.com/user-attachments/assets/e2e30a68-896e-480b-84af-22844cc215d8)
+<img width="1146" alt="image" src="https://github.com/user-attachments/assets/9dfd54ca-6756-407c-8331-e072d7f43654" />
+
 
 ### Certbot Configuration
 ![Certbot](https://github.com/user-attachments/assets/95beac83-6d45-43c3-8125-95f47dca0b14)
@@ -95,6 +101,6 @@ When the user presses “More Info,” they are presented with additional inform
 ![Docker PS](https://github.com/user-attachments/assets/f3e94af5-66aa-4bd2-837d-8f7d8fcbbd25)
 
 ### PG Admin Data Columns
-![PG Admin](https://github.com/user-attachments/assets/02dc01b3-bb0e-4f84-9b5a7cbf50c0)
+![PG Admin](https://github.com/user-attachments/assets/02dc01b3-bb0e-4f84-9fc4-9b5a7cbf50c0)
 These columns represent the data imported into the application. The data was sourced from [data.gov.ie](https://data.gov.ie/dataset/events). Initially, I attempted to use the API but opted to download the data as a CSV file and convert it to JSON for better compatibility.
 
