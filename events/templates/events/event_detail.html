@@ -159,12 +159,13 @@
         <p><strong>Event Type:</strong> {{ object.event_type|default:"N/A" }}</p>
         <p><strong>Description:</strong> {{ object.description|default:"No description provided." }}</p>
         <p><strong>Venue:</strong> {{ object.venue_name|default:"Not specified" }}</p>
-        <a class="navigate-btn" 
-               href="https://www.google.com/maps?q={{ event.latitude }},{{ event.longitude }}" 
-               target="_blank">
-                Get Directions
-            </a>
         <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
+        
+        <a class="navigate-btn" 
+        href="https://www.google.com/maps?q={{ event.latitude }},{{ event.longitude }}" 
+        target="_blank">
+         Get Directions
+     </a>
         <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
         <p><strong>Phone:</strong> {{ object.contact_phone_number|default:"No phone number" }}</p>
         <p><strong>Price:</strong> {{ object.price|default:"Free to visit" }}</p>
