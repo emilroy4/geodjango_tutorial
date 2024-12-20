@@ -30,6 +30,7 @@ The Event App is a dynamic web application designed to showcase events across Ir
 
 1. **Access the Website**:
    - Visit the website at [Event App](https://c21716601awm24.xyz).
+   - Login/Register an account.
 
 2. **Explore Events on the Map**:
    - Navigate the interactive map to view event locations.
