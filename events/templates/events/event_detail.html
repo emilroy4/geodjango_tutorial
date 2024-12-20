@@ -142,6 +142,7 @@
         <p><strong>Event Type:</strong> {{ object.event_type|default:"N/A" }}</p>
         <p><strong>Description:</strong> {{ object.description|default:"No description provided." }}</p>
         <p><strong>Venue:</strong> {{ object.venue_name|default:"Not specified" }}</p>
+        <a id="navigateBtn" class="navigate-btn" href="#" onclick="navigateToEvent()">Navigate to</a>
         <p><strong>Address:</strong> {{ object.address|default:"Not provided" }}</p>
         <p><strong>County:</strong> {{ object.county|default:"Not provided" }}</p>
         <p><strong>Phone:</strong> {{ object.contact_phone_number|default:"No phone number" }}</p>
@@ -193,6 +194,31 @@
         darkModeToggle.textContent = isDarkMode ? '☀️' : '🌙';
         localStorage.setItem('darkMode', isDarkMode); // Save preference
     });
+
+    function navigateToEvent() {
+            // Replace with your event's latitude and longitude
+            const eventLatitude = {{ event.latitude }};
+            const eventLongitude = {{ event.longitude }};
+
+            // Check if Geolocation is available
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLatitude = position.coords.latitude;
+                        const userLongitude = position.coords.longitude;
+
+                        // Open Google Maps with directions
+                        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLatitude},${userLongitude}&destination=${eventLatitude},${eventLongitude}`;
+                        window.open(googleMapsUrl, '_blank');
+                    },
+                    (error) => {
+                        alert('Unable to retrieve your location. Please enable location services.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        }
     </script>
 </body>
 </html>
