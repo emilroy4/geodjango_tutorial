@@ -2,7 +2,7 @@
 <img src="https://github.com/user-attachments/assets/57b62c8c-d05b-4c50-a58d-9b08875cdbe7" alt="logo" width="200">
 
 ## Visit the Website
-[Access the Event App here](https://c21716601awm24.xyz)
+[Access the Event App here](https://c21716601awm24.xyz/events)
 
 ## Docker Hub Link
 
