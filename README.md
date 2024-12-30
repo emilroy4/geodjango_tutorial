@@ -1,6 +1,7 @@
 # CA2: Event App (Around Eire)
 <img src="https://github.com/user-attachments/assets/57b62c8c-d05b-4c50-a58d-9b08875cdbe7" alt="logo" width="200">
 
+Application Logo with the Ireland flag and country.
 ## Visit the Website
 [Access the Event App here](https://c21716601awm24.xyz/events)
 
@@ -18,12 +19,12 @@ The Event App is a dynamic web application designed to showcase events across Ir
 | 🗺️ **Interactive Maps**       | Real-time updates with interactive controls for navigating and zooming.       |
 | 📍 **Event Navigation**      | Directly open event locations on Google Maps for user convenience.            |
 | 🔍 **Event Filters**          | Filter events by type, date, and keywords for customised views.               |
-| ❤️ **User Favorites**         | Save and filter favorite events for quick access.                             |
+| ❤️ **User favourites**         | Save and filter favourite events for quick access.                             |
 | 📄 **Event Details**          | Access detailed event information with images and sharing options.            |
 | 🔗 **Share Event**            | Share events on popular platforms like Facebook, X (Twitter), and LinkedIn.   |
 | 🛰️ **Satellite Mode**         | Toggle between standard and satellite map views.                              |
 | 🔒 **Secure Deployment**      | Ensures user data and access are protected with HTTPS.                        |
-| 📱 **Responsive Interface**   | Works seamlessly on mobile, tablet, and desktop devices.                      |
+| 📱 **Responsive Interface**   | Works seamlessly on mobile, tablet, and desktop devices. Darkmode functionality.|
 | 🛠️ **Event Management**       | Administrators can add, edit, and remove events via the database.             |
 
 ## Instructions to Use the Application
@@ -42,26 +43,33 @@ The Event App is a dynamic web application designed to showcase events across Ir
 4. **Search and Filter Events**:
    - Use the search bar to find events by name or keywords.
    - Apply filters to narrow down events by type, month, or year.
+   - You can also filter by showing only upcoming events.
 
 5. **View Event Details**:
    - Click on an event marker or card to view detailed information about the event.
    - See event details such as title, type, date, and location.
 
 6. **Navigate to Events**:
-   - Click the "Navigate to" button to open the event location on Google Maps.
+   - Click the "Get Directions" button to open the event location on Google Maps.
 
-7. **Mark Events as Favorites**:
-   - Click the heart icon on an event card to add it to your favorites.
-   - Use the favorites toggle to view only your saved events.
+7. **Mark Events as favourites**:
+   - Click the heart icon on an event card to add it to your favourites.
+   - Use the favourites toggle to view only your saved events on the map or grid.
 
 8. **Share Events**:
    - Use the share options to post events to Facebook, X (Twitter), or LinkedIn.
+  
+![image](https://github.com/user-attachments/assets/dfd04370-3408-407d-8b32-48c5c2342122)
 
 9. **Responsive Design**:
    - Enjoy seamless navigation across mobile, tablet, and desktop devices.
+     
+![image](https://github.com/user-attachments/assets/5f1e2b58-f07c-4052-8b35-39142bd65926)
 
 10. **Admin Features**:
-    - Log in as an admin to manage events, including adding, editing, and deleting entries.
+    - Log in as an admin to manage events, including adding, editing, and deleting entries. The admin can view all the registered accounts but their password is protected using hash. This improves the security of the application.
+![image](https://github.com/user-attachments/assets/0d70feba-565c-4dde-811c-71dbc07d8b54)
+
 
 ### Technologies Used
 1. **GeoDjango**: For geospatial data handling and mapping.
@@ -103,5 +111,6 @@ When the user presses “View Details,” they are presented with additional inf
 
 ### PG Admin Data Columns
 ![PG Admin](https://github.com/user-attachments/assets/02dc01b3-bb0e-4f84-9fc4-9b5a7cbf50c0)
+
 These columns represent the data imported into the application. The data was sourced from [data.gov.ie](https://data.gov.ie/dataset/events). Initially, I attempted to use the API but opted to download the data as a CSV file and convert it to JSON for better compatibility.
 
