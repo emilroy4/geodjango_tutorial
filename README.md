@@ -114,3 +114,28 @@ When the user presses “View Details,” they are presented with additional inf
 
 These columns represent the data imported into the application. The data was sourced from [data.gov.ie](https://data.gov.ie/dataset/events). Initially, I attempted to use the API but opted to download the data as a CSV file and convert it to JSON for better compatibility.
 
+Instructions:
+1. Go to http://54.194.183.109:20080
+2. Log in
+3. Register server with details
+   Go to the "Connection" tab:
+
+      Host: postgis.
+
+      Port: 5432.
+
+      Maintenance Database: postgres.
+
+      Username: docker
+
+      Password: docker
+   
+5. Navigate to the Events Table:
+      Select your connected database.
+      Expand Schemas > Public > Tables.
+      Locate and select your events table.
+6. Right-click the table and select Query Tool.
+      Run the following SQL query:
+      SELECT * FROM events_event;
+
+This will display all events in the events table.
