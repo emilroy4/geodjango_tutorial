@@ -114,6 +114,8 @@ When the user presses “View Details,” they are presented with additional inf
 
 These columns represent the data imported into the application. The data was sourced from [data.gov.ie](https://data.gov.ie/dataset/events). Initially, I attempted to use the API but opted to download the data as a CSV file and convert it to JSON for better compatibility.
 
+### PG Admin How To Access
+
 Instructions:
 1. Go to http://54.194.183.109:20080
 2. Log in
@@ -138,4 +140,7 @@ Instructions:
       Run the following SQL query:
       SELECT * FROM events_event;
 
-This will display all events in the events table.
+This will display all events in the events table. There are currently 783 events.
+
+![image](https://github.com/user-attachments/assets/db897e70-79ad-4611-a270-e54841b12510)
+
